@@ -993,6 +993,46 @@
         'Data Engineer Level 5': ['connector-original-de5', 'connector-duplicate-de5']
       };
 
+      // ===== Course-Specific Element Hiding Rules =====
+      // Map course names to specific elements that should be hidden when that course is clicked
+      // Each entry contains an array of CSS selectors for elements to hide
+      var COURSE_SPECIFIC_ELEMENTS_TO_HIDE = {
+        // When Business Admin Level 3 is clicked, hide these specific connector elements
+        'Business Admin Level 3': [
+          'line.st18.pulse-target.connector-original-pl3[x1="583.42"]',
+          'path.st26.pulse-target.connector-original-pl3[d^="M549.83,482.93"]'
+        ],
+
+        // Add rules for other courses here as needed
+        'Accountancy Level 2': [
+          // Example: 'line.example-class[x1="123"]'
+        ],
+
+        'Accountancy Level 3/4': [
+          // Add specific elements to hide for this course
+        ],
+
+        'Procurement Level 3': [
+          // Add specific elements to hide for this course
+        ],
+
+        'Procurement Level 4': [
+          // Add specific elements to hide for this course
+        ],
+
+        'Data Technician Level 3': [
+          // Add specific elements to hide for this course
+        ],
+
+        'Data Analyst Level 4': [
+          // Add specific elements to hide for this course
+        ],
+
+        'Data Engineer Level 5': [
+          // Add specific elements to hide for this course
+        ]
+      };
+
       // Keep track of selected course
       var selectedCourse = null;
 
@@ -1034,6 +1074,7 @@
 
         updateCourseVisibility(visibleCoursesSet);
         updateConnectorVisibility(visibleCoursesSet);
+        applyCourseSpecificHiding(courseName);
         showCourseInfo(courseName);
       }
 
@@ -1057,6 +1098,9 @@
             }
           }
         }
+
+        // Reset course-specific hidden elements
+        resetCourseSpecificHiding();
       }
 
       // Update course visibility based on visible courses set
@@ -1110,6 +1154,42 @@
             var elements = document.querySelectorAll('.' + classes[j]);
             for (var k = 0; k &lt; elements.length; k++) {
               elements[k].style.display = isVisible ? '' : 'none';
+            }
+          }
+        }
+      }
+
+      // Apply course-specific element hiding rules
+      function applyCourseSpecificHiding(courseName) {
+        var selectors = COURSE_SPECIFIC_ELEMENTS_TO_HIDE[courseName];
+        if (selectors && selectors.length > 0) {
+          for (var i = 0; i < selectors.length; i++) {
+            var selector = selectors[i];
+            // Skip empty selectors or comments
+            if (selector && typeof selector === 'string' && selector.indexOf('//') !== 0) {
+              var elements = document.querySelectorAll(selector);
+              for (var j = 0; j < elements.length; j++) {
+                elements[j].style.display = 'none';
+              }
+            }
+          }
+        }
+      }
+
+      // Reset all course-specific hidden elements
+      function resetCourseSpecificHiding() {
+        for (var course in COURSE_SPECIFIC_ELEMENTS_TO_HIDE) {
+          var selectors = COURSE_SPECIFIC_ELEMENTS_TO_HIDE[course];
+          if (selectors && selectors.length > 0) {
+            for (var i = 0; i < selectors.length; i++) {
+              var selector = selectors[i];
+              // Skip empty selectors or comments
+              if (selector && typeof selector === 'string' && selector.indexOf('//') !== 0) {
+                var elements = document.querySelectorAll(selector);
+                for (var j = 0; j < elements.length; j++) {
+                  elements[j].style.display = '';
+                }
+              }
             }
           }
         }
