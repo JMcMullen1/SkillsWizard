@@ -1013,6 +1013,95 @@ body {
             padding: 1rem;
         }
 
+        /* Course Node States */
+        .course-node {
+            cursor: pointer;
+            transition: transform 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
+        }
+
+        .course-node-current {
+            filter: url(#outer-glow);
+            transform: scale(1.04);
+        }
+
+        .course-node-pathway {
+            opacity: 1;
+        }
+
+        .course-node-dimmed {
+            opacity: 0.15;
+        }
+
+        /* Connector States */
+        .connector-dimmed {
+            opacity: 0.1;
+        }
+
+        .connector-highlight {
+            opacity: 1;
+            filter: url(#outer-glow);
+        }
+
+        /* Course Popup */
+        .course-popup {
+            position: absolute;
+            max-width: 260px;
+            background: rgba(255,255,255,0.98);
+            border-radius: 0.9rem;
+            padding: 1rem 1.2rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.18);
+            border: 1px solid var(--medium-gray);
+            z-index: 50;
+            font-size: 0.9rem;
+            pointer-events: auto;
+        }
+
+        .course-popup h3 {
+            margin: 0 0 0.4rem 0;
+            font-size: 1rem;
+            color: var(--taa-navy);
+        }
+
+        .course-popup small {
+            color: var(--text-secondary);
+        }
+
+        .course-popup .popup-actions {
+            margin-top: 0.8rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .course-popup button {
+            border-radius: 999px;
+            padding: 0.4rem 0.9rem;
+            font-size: 0.85rem;
+        }
+
+        .course-popup .secondary-btn {
+            background: white;
+            color: var(--taa-navy);
+            border: 2px solid var(--medium-gray);
+        }
+
+        .course-popup .secondary-btn:hover {
+            background: var(--light-gray);
+            border-color: var(--taa-navy);
+        }
+
+        .course-popup .primary-btn {
+            background: var(--taa-orange);
+            color: white;
+            border: 2px solid var(--taa-orange);
+        }
+
+        .course-popup .primary-btn:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
         /* Summary styles with gradients */
         .skill-badge {
             display: inline-block;
@@ -3157,6 +3246,54 @@ body {
                 }
             };
 
+            // SVG course node ID mapping
+            const SVG_COURSE_NODE_MAP = {
+                'accountancy-level-2': 'Accountancy Level 2',
+                'accountancy-level-3-4': 'Accountancy Level 3/4',
+                'business-admin-level-3': 'Business Admin Level 3',
+                'procurement-level-3': 'Procurement Level 3',
+                'procurement-level-4': 'Procurement Level 4',
+                'data-technician-level-3': 'Data Technician Level 3',
+                'data-analyst-level-4': 'Data Analyst Level 4',
+                'data-engineer-level-5': 'Data Engineer Level 5'
+            };
+
+            // Map courses to their connector classes
+            const PROGRESSION_CONNECTORS = {
+                'Accountancy Level 2': [
+                    '.connector-original-l2',
+                    '.connector-duplicate-l2'
+                ],
+                'Accountancy Level 3/4': [
+                    '.connector-original-l3-4',
+                    '.connector-duplicate-l3-4'
+                ],
+                'Business Admin Level 3': [
+                    '.connector-original-ba',
+                    '.connector-duplicate-ba'
+                ],
+                'Procurement Level 3': [
+                    '.connector-original-pl3',
+                    '.connector-duplicate-pl3'
+                ],
+                'Procurement Level 4': [
+                    '.connector-original-pl4',
+                    '.connector-duplicate-pl4'
+                ],
+                'Data Technician Level 3': [
+                    '.connector-original-dt3',
+                    '.connector-duplicate-dt3'
+                ],
+                'Data Analyst Level 4': [
+                    '.connector-original-da4',
+                    '.connector-duplicate-da4'
+                ],
+                'Data Engineer Level 5': [
+                    '.connector-original-de5',
+                    '.connector-duplicate-de5'
+                ]
+            };
+
             // Bridge questions placeholders for each course
             const BRIDGE_QUESTIONS = {
                 'Accountancy Level 2': [
@@ -3634,6 +3771,7 @@ body {
                 userData: {
                     name: '',
                     currentCourse: '',
+                    targetCourse: '',
                     jobTitle: '',
                     availablePathways: [],
                     bridgeAnswers: {},
@@ -3666,6 +3804,9 @@ body {
                 } else {
                     console.error('✗ Could not find coach contact form');
                 }
+
+                // Initialize career map interactions
+                initCareerMapInteractions();
 
                 setTimeout(() => startConversation(), 500);
             }
@@ -3773,16 +3914,10 @@ body {
             function askCurrentCourse() {
                 addMessage('Great to meet you, ' + state.userData.name + '! 😊');
                 setTimeout(() => {
-                    addMessage('Which apprenticeship course are you currently on?', false, [
-                        { label: 'Accountancy Level 2', value: 'Accountancy Level 2' },
-                        { label: 'Accountancy Level 3/4', value: 'Accountancy Level 3/4' },
-                        { label: 'Business Admin Level 3', value: 'Business Admin Level 3' },
-                        { label: 'Procurement Level 3', value: 'Procurement Level 3' },
-                        { label: 'Procurement Level 4', value: 'Procurement Level 4' },
-                        { label: 'Data Technician Level 3', value: 'Data Technician Level 3' },
-                        { label: 'Data Analyst Level 4', value: 'Data Analyst Level 4' },
-                        { label: 'Data Engineer Level 5', value: 'Data Engineer Level 5' }
-                    ]);
+                    addMessage('To get started, <strong>please click on the course bubble that best matches your current apprenticeship on the career map to the right.</strong>');
+                    setTimeout(() => {
+                        addMessage('Once you\'ve selected your current course, you can explore progression pathways and then move into the Three C\'s assessment to get personalised recommendations!');
+                    }, 1200);
                 }, 600);
             }
 
@@ -3857,6 +3992,234 @@ body {
                         }, 2000);
                     }, 2000);
                 }, 1000);
+            }
+
+            // ==========================================
+            // Career Map Interaction Functions
+            // ==========================================
+
+            function getCourseSummary(courseName) {
+                const info = CAREER_INFO[courseName];
+                if (info && info.careers && info.careers.length > 0) {
+                    const primary = info.careers[0];
+                    const sentence = `${primary.title}: typically ${primary.responsibilities[0].toLowerCase()} and related responsibilities.`;
+                    return {
+                        title: courseName,
+                        subtitle: primary.title,
+                        summary: sentence
+                    };
+                }
+
+                // Fallback for courses not in CAREER_INFO
+                return {
+                    title: courseName,
+                    subtitle: '',
+                    summary: 'This route builds on your current skills and prepares you for more advanced responsibilities in this area.'
+                };
+            }
+
+            function resetMapHighlight() {
+                const svg = document.getElementById('CareerMapSVG');
+                if (!svg) return;
+
+                svg.querySelectorAll('.course-node').forEach(node => {
+                    node.classList.remove('course-node-current', 'course-node-pathway', 'course-node-dimmed');
+                });
+
+                svg.querySelectorAll('.connector-highlight, .connector-dimmed').forEach(conn => {
+                    conn.classList.remove('connector-highlight', 'connector-dimmed');
+                });
+            }
+
+            function highlightCourseAndPathways(currentCourseName) {
+                const svg = document.getElementById('CareerMapSVG');
+                if (!svg) return;
+
+                resetMapHighlight();
+
+                // Get valid next courses
+                const nextCourses = getAvailablePathways(currentCourseName);
+
+                // Dim all connectors by default
+                svg.querySelectorAll('path[class*="connector-"], line[class*="connector-"]').forEach(conn => {
+                    conn.classList.add('connector-dimmed');
+                });
+
+                // Highlight active connectors for current course
+                if (PROGRESSION_CONNECTORS[currentCourseName]) {
+                    PROGRESSION_CONNECTORS[currentCourseName].forEach(selector => {
+                        svg.querySelectorAll(selector).forEach(conn => {
+                            conn.classList.remove('connector-dimmed');
+                            conn.classList.add('connector-highlight');
+                        });
+                    });
+                }
+
+                // Also highlight connectors for reachable next courses
+                nextCourses.forEach(nextCourse => {
+                    if (PROGRESSION_CONNECTORS[nextCourse]) {
+                        PROGRESSION_CONNECTORS[nextCourse].forEach(selector => {
+                            svg.querySelectorAll(selector).forEach(conn => {
+                                conn.classList.remove('connector-dimmed');
+                                conn.classList.add('connector-highlight');
+                            });
+                        });
+                    }
+                });
+
+                // Process all course nodes
+                Object.keys(SVG_COURSE_NODE_MAP).forEach(svgId => {
+                    const node = svg.querySelector('#' + svgId);
+                    if (!node) return;
+
+                    const courseName = SVG_COURSE_NODE_MAP[svgId];
+
+                    // Dim by default
+                    node.classList.add('course-node-dimmed');
+
+                    // Highlight current course
+                    if (courseName === currentCourseName) {
+                        node.classList.remove('course-node-dimmed');
+                        node.classList.add('course-node-current');
+                    }
+
+                    // Highlight reachable courses
+                    if (nextCourses.includes(courseName)) {
+                        node.classList.remove('course-node-dimmed');
+                        node.classList.add('course-node-pathway');
+                    }
+                });
+            }
+
+            function setupCoursePopup() {
+                const careerMapPanel = document.getElementById('careerMapPanel');
+                if (!careerMapPanel) return;
+
+                const popup = document.createElement('div');
+                popup.id = 'coursePopup';
+                popup.className = 'course-popup';
+                popup.style.display = 'none';
+                careerMapPanel.appendChild(popup);
+            }
+
+            function showCoursePopup(courseName, anchorElement) {
+                const popup = document.getElementById('coursePopup');
+                const careerMapPanel = document.getElementById('careerMapPanel');
+                if (!popup || !careerMapPanel) return;
+
+                const summary = getCourseSummary(courseName);
+
+                popup.innerHTML = `
+                    <h3>${summary.title}</h3>
+                    ${summary.subtitle ? `<small>${summary.subtitle}</small><br><br>` : ''}
+                    <p style="margin: 0.5rem 0; line-height: 1.5;">${summary.summary}</p>
+                    <p style="margin-top: 0.8rem; font-size: 0.85rem; color: var(--text-secondary);">
+                        Click the orange button below when you're ready to move into the Three C's assessment.
+                    </p>
+                    <div class="popup-actions">
+                        <button type="button" class="secondary-btn" data-popup-dismiss>Close</button>
+                        <button type="button" class="primary-btn" id="startThreeCsBtn">
+                            Continue to Three C's
+                        </button>
+                    </div>
+                `;
+
+                // Position popup near the clicked element
+                const panelRect = careerMapPanel.getBoundingClientRect();
+                const anchorRect = anchorElement.getBoundingClientRect();
+
+                let left = anchorRect.left - panelRect.left + (anchorRect.width / 2);
+                let top = anchorRect.top - panelRect.top + anchorRect.height + 10;
+
+                // Clamp to panel bounds
+                const maxLeft = panelRect.width - 280;
+                const maxTop = panelRect.height - 300;
+                left = Math.max(20, Math.min(left, maxLeft));
+                top = Math.max(20, Math.min(top, maxTop));
+
+                popup.style.left = left + 'px';
+                popup.style.top = top + 'px';
+                popup.style.display = 'block';
+
+                // Attach event listeners
+                popup.querySelector('[data-popup-dismiss]').addEventListener('click', hideCoursePopup);
+                popup.querySelector('#startThreeCsBtn').addEventListener('click', () => {
+                    state.userData.targetCourse = courseName;
+                    hideCoursePopup();
+                    addMessage(`Great choice! Let's quickly check your skills, personality, and preferences for <strong>${courseName}</strong>.`, true);
+                    setTimeout(() => {
+                        openBridgeQuestionsModal();
+                    }, 500);
+                });
+            }
+
+            function hideCoursePopup() {
+                const popup = document.getElementById('coursePopup');
+                if (popup) {
+                    popup.style.display = 'none';
+                }
+            }
+
+            function handleCourseNodeClick(svgId) {
+                const courseName = SVG_COURSE_NODE_MAP[svgId];
+                if (!courseName) return;
+
+                const previousCourse = state.userData.currentCourse;
+
+                // If clicking the same course, do nothing
+                if (previousCourse === courseName) {
+                    return;
+                }
+
+                // If no current course set, this becomes the current course
+                if (!previousCourse) {
+                    state.userData.currentCourse = courseName;
+                    highlightCourseAndPathways(courseName);
+                    addMessage(`You've selected <strong>${courseName}</strong> as your current course. I've highlighted realistic next steps on the map. Click any of the highlighted bubbles to learn more about that route.`, true);
+                    hideCoursePopup();
+                    return;
+                }
+
+                // Check if clicked course is a valid next step
+                const availablePathways = getAvailablePathways(previousCourse);
+                if (availablePathways.includes(courseName)) {
+                    // Show popup for this progression option
+                    const svg = document.getElementById('CareerMapSVG');
+                    const clickedNode = svg.querySelector('#' + svgId);
+                    if (clickedNode) {
+                        showCoursePopup(courseName, clickedNode);
+                    }
+                } else {
+                    // Treat as new current course selection
+                    state.userData.currentCourse = courseName;
+                    highlightCourseAndPathways(courseName);
+                    addMessage(`You've changed your selection to <strong>${courseName}</strong>. I've updated the map to show progression paths from this course.`, true);
+                    hideCoursePopup();
+                }
+            }
+
+            function initCareerMapInteractions() {
+                const svg = document.getElementById('CareerMapSVG');
+                if (!svg) {
+                    console.warn('CareerMapSVG not found');
+                    return;
+                }
+
+                // Mark nodes and attach click handlers
+                Object.keys(SVG_COURSE_NODE_MAP).forEach(id => {
+                    const node = svg.querySelector('#' + id);
+                    if (!node) {
+                        console.warn(`SVG node not found: ${id}`);
+                        return;
+                    }
+                    node.classList.add('course-node');
+                    node.addEventListener('click', () => {
+                        handleCourseNodeClick(id);
+                    });
+                });
+
+                setupCoursePopup();
+                console.log('Career map interactions initialized');
             }
 
             function getAvailablePathways(course) {
