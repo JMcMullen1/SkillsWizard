@@ -1069,7 +1069,35 @@
       // Update connector visibility
       function updateConnectorVisibility(visibleCoursesSet) {
         for (var course in COURSE_CONNECTOR_CLASSES) {
-          var isVisible = visibleCoursesSet[course];
+          // Check if source course is visible
+          var sourceVisible = visibleCoursesSet[course];
+
+          // Check if all target courses are visible
+          var allTargetsVisible = true;
+          var pathways = PROGRESSION_PATHWAYS[course];
+          if (pathways) {
+            // Check direct pathways
+            if (pathways.direct) {
+              for (var i = 0; i &lt; pathways.direct.length; i++) {
+                if (!visibleCoursesSet[pathways.direct[i]]) {
+                  allTargetsVisible = false;
+                  break;
+                }
+              }
+            }
+            // Check core pathways
+            if (allTargetsVisible && pathways.core) {
+              for (var i = 0; i &lt; pathways.core.length; i++) {
+                if (!visibleCoursesSet[pathways.core[i]]) {
+                  allTargetsVisible = false;
+                  break;
+                }
+              }
+            }
+          }
+
+          // Only show connectors if source is visible AND all targets are visible
+          var isVisible = sourceVisible && allTargetsVisible;
           var classes = COURSE_CONNECTOR_CLASSES[course];
           for (var j = 0; j &lt; classes.length; j++) {
             var elements = document.querySelectorAll('.' + classes[j]);
