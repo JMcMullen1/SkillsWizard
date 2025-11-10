@@ -1000,9 +1000,16 @@
       function getLinkedCourses(courseName) {
         var linked = [courseName];
         var cfg = PROGRESSION_PATHWAYS[courseName];
-        if (cfg && cfg.direct) {
-          for (var i = 0; i &lt; cfg.direct.length; i++) {
-            linked.push(cfg.direct[i]);
+        if (cfg) {
+          if (cfg.direct) {
+            for (var i = 0; i &lt; cfg.direct.length; i++) {
+              linked.push(cfg.direct[i]);
+            }
+          }
+          if (cfg.core) {
+            for (var i = 0; i &lt; cfg.core.length; i++) {
+              linked.push(cfg.core[i]);
+            }
           }
         }
         return linked;
