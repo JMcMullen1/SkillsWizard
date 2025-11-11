@@ -6,8 +6,38 @@
   <title>Centered SVG — Inline</title>
   <style>
     html, body { height: 100%; margin: 0; background: #fff; }
-    body { display: flex; align-items: center; justify-content: center; }
+    body { display: flex; align-items: center; justify-content: center; position: relative; }
     svg { max-width: 90vw; max-height: 90vh; width: 100%; height: auto; display: block; }
+
+    /* Course Popup Styles */
+    .course-popup {
+      position: absolute;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+      max-width: 280px;
+      z-index: 999;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+    .course-popup h3 {
+      margin-top: 0;
+      font-size: 1rem;
+      color: #002147;
+    }
+    .course-popup button {
+      margin-top: 0.8rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #f3f3f3;
+      border: 1px solid #ccc;
+    }
+    .course-popup button:hover {
+      background: #e0e0e0;
+    }
   </style>
 </head>
 <body>
@@ -1065,8 +1095,45 @@
         ]
       };
 
-      // Keep track of selected course
+      // ===== Course Information for Popups =====
+      var COURSE_INFO = {
+        "Accountancy Level 2": {
+          title: "Accountancy Level 2",
+          text: "An ideal starting point for those new to finance. Learn basic bookkeeping, data entry, and how to handle simple financial documents. Progresses naturally into Level 3/4 or related data roles."
+        },
+        "Accountancy Level 3/4": {
+          title: "Accountancy Level 3/4",
+          text: "Builds advanced accounting and reporting skills. Focuses on producing accurate financial statements, supporting audits, and preparing for leadership or analyst roles."
+        },
+        "Business Admin Level 3": {
+          title: "Business Admin Level 3",
+          text: "Develops organisational and project coordination skills. Great for those supporting office operations, team coordination, and business processes."
+        },
+        "Procurement Level 3": {
+          title: "Procurement Level 3",
+          text: "Covers purchasing, supplier communication, and negotiation fundamentals. Builds the foundation for progressing into Procurement Level 4 or Data Technician Level 3."
+        },
+        "Procurement Level 4": {
+          title: "Procurement Level 4",
+          text: "Focuses on strategic sourcing, supply chain analysis, and advanced contract management. Often leads into data or management-level roles such as CIPS Level 5."
+        },
+        "Data Technician Level 3": {
+          title: "Data Technician Level 3",
+          text: "Introduces data collection, processing, and reporting using modern digital tools. Ideal for moving toward Data Analyst or Data Engineer pathways."
+        },
+        "Data Analyst Level 4": {
+          title: "Data Analyst Level 4",
+          text: "Teaches statistical analysis, data visualisation, and storytelling with data. Builds analytical capability for strategic business decision-making."
+        },
+        "Data Engineer Level 5": {
+          title: "Data Engineer Level 5",
+          text: "Advanced programme covering data architecture, pipelines, and automation. Prepares learners for highly technical data careers or leadership positions."
+        }
+      };
+
+      // Keep track of selected course and visible courses
       var selectedCourse = null;
+      var visibleCourses = {};
 
       // Get linked courses for a given course
       function getLinkedCourses(courseName) {
@@ -1104,6 +1171,9 @@
           visibleCoursesSet[linkedCourses[i]] = true;
         }
 
+        // Store visible courses globally
+        visibleCourses = visibleCoursesSet;
+
         updateCourseVisibility(visibleCoursesSet);
         updateConnectorVisibility(visibleCoursesSet);
         applyCourseSpecificHiding(courseName);
@@ -1113,6 +1183,10 @@
       // Reset course filter to show all courses
       function resetCourseFilter() {
         selectedCourse = null;
+        visibleCourses = {};
+
+        // Remove any existing popup
+        removeExistingPopup();
 
         // Show all course groups
         var allCourseElements = document.querySelectorAll('[data-course]');
@@ -1243,6 +1317,37 @@
         console.log('Course selected:', courseName);
       }
 
+      // ===== Course Popup Functions =====
+
+      // Helper: remove existing popup
+      function removeExistingPopup() {
+        var existing = document.querySelector('.course-popup');
+        if (existing) existing.remove();
+      }
+
+      // Show popup for a course
+      function showCoursePopup(courseName, anchorElement) {
+        removeExistingPopup();
+        var info = COURSE_INFO[courseName];
+        if (!info) return;
+
+        var popup = document.createElement('div');
+        popup.className = 'course-popup';
+        popup.innerHTML = '<h3>' + info.title + '</h3>' +
+                          '<p>' + info.text + '</p>' +
+                          '<button class="close-popup">Close</button>';
+
+        var rect = anchorElement.getBoundingClientRect();
+        var container = anchorElement.closest('svg').parentElement;
+        var containerRect = container.getBoundingClientRect();
+
+        popup.style.left = (rect.left - containerRect.left + rect.width / 2) + 'px';
+        popup.style.top = (rect.top - containerRect.top - 100) + 'px';
+
+        container.appendChild(popup);
+        popup.querySelector('.close-popup').addEventListener('click', removeExistingPopup);
+      }
+
       // Initialize course click filtering
       function initCourseClickFiltering() {
         var svgRoot = document.getElementById('Layer_1');
@@ -1255,13 +1360,20 @@
 
           node.style.cursor = 'pointer';
 
-          // Use a closure to capture the correct courseName
-          (function(courseName) {
-            node.addEventListener('click', function(evt) {
+          // Use a closure to capture the correct courseName and node
+          (function(courseName, nodeElement) {
+            nodeElement.addEventListener('click', function(evt) {
               evt.stopPropagation();
-              handleCourseClick(courseName);
+
+              // If a course is already selected and this course is visible, show popup
+              if (selectedCourse && visibleCourses[courseName]) {
+                showCoursePopup(courseName, nodeElement);
+              } else {
+                // Otherwise, handle normal course filtering
+                handleCourseClick(courseName);
+              }
             });
-          })(SVG_COURSE_NODE_MAP[svgId]);
+          })(SVG_COURSE_NODE_MAP[svgId], node);
         }
 
         // Optional: clicking on empty space resets the view
