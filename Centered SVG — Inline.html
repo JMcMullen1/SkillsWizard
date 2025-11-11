@@ -1002,6 +1002,17 @@
         'data-engineer-level-5': 'Data Engineer Level 5'
       };
 
+      // Normalize data-course attribute values to match course names in PROGRESSION_PATHWAYS
+      // This ensures elements with lowercase-hyphenated data-course attributes match properly
+      function normalizeCourseAttribute(dataCourseValue) {
+        // If it's already in the SVG_COURSE_NODE_MAP, convert it
+        if (SVG_COURSE_NODE_MAP[dataCourseValue]) {
+          return SVG_COURSE_NODE_MAP[dataCourseValue];
+        }
+        // Otherwise return as-is (handles Title Case format)
+        return dataCourseValue;
+      }
+
       // Map course names to connector classes
       var COURSE_CONNECTOR_CLASSES = {
         'Accountancy Level 2': ['connector-original-l2', 'connector-duplicate-l2'],
@@ -1136,11 +1147,12 @@
         for (var i = 0; i &lt; allCourseElements.length; i++) {
           var el = allCourseElements[i];
           var course = el.getAttribute('data-course');
+          var normalizedCourse = normalizeCourseAttribute(course);
 
           // Always show non-clickable course labels
           if (ALWAYS_VISIBLE_COURSE_LABELS.indexOf(course) !== -1) {
             el.style.display = '';
-          } else if (visibleCoursesSet[course]) {
+          } else if (visibleCoursesSet[normalizedCourse]) {
             el.style.display = '';
           } else {
             el.style.display = 'none';
