@@ -1196,15 +1196,11 @@
         return linked;
       }
 
-      // Track if this is the first course click
-      var isFirstClick = true;
-
       // Handle course click
       function handleCourseClick(courseName) {
         // If the same course is clicked again, reset the view
         if (selectedCourse === courseName) {
           resetCourseFilter();
-          isFirstClick = true;
           return;
         }
 
@@ -1221,11 +1217,10 @@
         updateConnectorVisibility(visibleCoursesSet);
         applyCourseSpecificHiding(courseName);
 
-        // Only show popup on second click (not the first click)
-        if (!isFirstClick) {
+        // Show popup immediately when course is clicked and has filtered options
+        if (linkedCourses.length > 0) {
           showCourseInfo(courseName);
         }
-        isFirstClick = false;
       }
 
       // Reset course filter to show all courses
@@ -1418,8 +1413,10 @@
         svgRoot.addEventListener('click', function() {
           resetCourseFilter();
         });
+      }
 
-        // Add event listeners for popup close button and overlay
+      // Initialize popup close button event listeners after DOM is loaded
+      function initPopupEventListeners() {
         var closeBtn = document.querySelector('#course-description-popup .close-btn');
         var overlay = document.getElementById('course-description-overlay');
 
@@ -1428,12 +1425,16 @@
             evt.stopPropagation();
             hideCourseInfo();
           });
+        } else {
+          console.error('Close button not found');
         }
 
         if (overlay) {
           overlay.addEventListener('click', function() {
             hideCourseInfo();
           });
+        } else {
+          console.error('Overlay not found');
         }
       }
 
@@ -1669,5 +1670,15 @@
   <h2>Course Name</h2>
   <p>Course description will appear here.</p>
 </div>
+
+<script>
+  // Initialize popup event listeners after DOM is fully loaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPopupEventListeners);
+  } else {
+    // DOM is already loaded
+    initPopupEventListeners();
+  }
+</script>
 
 </body></html>
