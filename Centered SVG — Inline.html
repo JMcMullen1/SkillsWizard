@@ -367,102 +367,6 @@
   .connector-duplicate-pl4 { stroke-opacity: 0; pointer-events: none; }
 
   .connector-duplicate-pl3 { stroke-opacity: 0; pointer-events: none; }
-
-  /* Course description pop-up styles */
-  #course-description-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    border: 3px solid #4A90E2;
-    border-radius: 12px;
-    padding: 24px;
-    max-width: 500px;
-    width: 90%;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    z-index: 10000;
-    display: none;
-    font-family: Arial, sans-serif;
-  }
-
-  #course-description-popup.show {
-    display: block;
-    animation: fadeIn 0.3s ease-in;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translate(-50%, -48%);
-    }
-    to {
-      opacity: 1;
-      transform: translate(-50%, -50%);
-    }
-  }
-
-  #course-description-popup h2 {
-    margin: 0 0 16px 0;
-    color: #2C3E50;
-    font-size: 24px;
-    border-bottom: 2px solid #4A90E2;
-    padding-bottom: 8px;
-  }
-
-  #course-description-popup p {
-    margin: 0 0 20px 0;
-    color: #34495E;
-    line-height: 1.6;
-    font-size: 16px;
-  }
-
-  #course-description-popup .close-btn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: #E74C3C;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    font-size: 20px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-  }
-
-  #course-description-popup .close-btn:hover {
-    background: #C0392B;
-  }
-
-  #course-description-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
-    display: none;
-  }
-
-  #course-description-overlay.show {
-    display: block;
-    animation: overlayFadeIn 0.3s ease-in;
-  }
-
-  @keyframes overlayFadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
 </style>
 <rect class="st23" height="595.28" width="841.89"></rect>
 <!-- Duplicate copies of connectors associated with Accountancy Level 2.
@@ -1161,19 +1065,6 @@
         ]
       };
 
-      // Course descriptions for the pop-up
-      var COURSE_DESCRIPTIONS = {
-        'Accountancy Level 2': 'Build foundational accounting skills including bookkeeping, financial records management, and basic financial principles. Perfect for those starting their journey in finance and accounting.',
-        'Accountancy Level 3/4': 'Advance your accounting expertise with complex financial reporting, tax preparation, and management accounting. Develop the skills needed for senior accounting roles and professional qualifications.',
-        'Business Admin Level 3': 'Master essential business administration skills including office management, stakeholder communication, and project coordination. Ideal for aspiring office managers and business administrators.',
-        'Procurement Level 3': 'Learn procurement fundamentals including supplier management, contract negotiation, and purchasing strategies. Build the foundation for a career in supply chain and procurement.',
-        'Procurement Level 4': 'Develop advanced procurement capabilities with strategic sourcing, vendor relationship management, and supply chain optimization. Progress towards senior procurement positions.',
-        'Data Technician Level 3': 'Gain practical data skills including data collection, cleaning, and basic analysis. Learn to work with databases and support data-driven decision making across organizations.',
-        'Data Analyst Level 4': 'Master data analysis techniques, statistical methods, and visualization tools. Transform raw data into actionable insights and drive business intelligence initiatives.',
-        'Data Engineer Level 5': 'Become a data engineering expert with advanced skills in data architecture, pipeline development, and big data technologies. Design and maintain robust data infrastructure at scale.',
-        'CIPS Level 5': 'Achieve professional procurement excellence with the Chartered Institute of Procurement & Supply qualification. Develop strategic procurement capabilities for senior leadership roles.'
-      };
-
       // Keep track of selected course
       var selectedCourse = null;
 
@@ -1216,11 +1107,7 @@
         updateCourseVisibility(visibleCoursesSet);
         updateConnectorVisibility(visibleCoursesSet);
         applyCourseSpecificHiding(courseName);
-
-        // Show popup immediately when course is clicked and has filtered options
-        if (linkedCourses.length > 0) {
-          showCourseInfo(courseName);
-        }
+        showCourseInfo(courseName);
       }
 
       // Reset course filter to show all courses
@@ -1351,41 +1238,9 @@
         }
       }
 
-      // Show course information in a pop-up
+      // Simple placeholder for course information
       function showCourseInfo(courseName) {
-        var description = COURSE_DESCRIPTIONS[courseName];
-        if (!description) {
-          console.log('No description available for:', courseName);
-          return;
-        }
-
-        var popup = document.getElementById('course-description-popup');
-        var overlay = document.getElementById('course-description-overlay');
-
-        if (!popup || !overlay) {
-          console.error('Pop-up elements not found');
-          return;
-        }
-
-        // Set the course name and description
-        var titleElement = popup.querySelector('h2');
-        var descriptionElement = popup.querySelector('p');
-
-        if (titleElement) titleElement.textContent = courseName;
-        if (descriptionElement) descriptionElement.textContent = description;
-
-        // Show the pop-up and overlay
-        overlay.classList.add('show');
-        popup.classList.add('show');
-      }
-
-      // Hide course information pop-up
-      function hideCourseInfo() {
-        var popup = document.getElementById('course-description-popup');
-        var overlay = document.getElementById('course-description-overlay');
-
-        if (popup) popup.classList.remove('show');
-        if (overlay) overlay.classList.remove('show');
+        console.log('Course selected:', courseName);
       }
 
       // Initialize course click filtering
@@ -1413,29 +1268,6 @@
         svgRoot.addEventListener('click', function() {
           resetCourseFilter();
         });
-      }
-
-      // Initialize popup close button event listeners after DOM is loaded
-      function initPopupEventListeners() {
-        var closeBtn = document.querySelector('#course-description-popup .close-btn');
-        var overlay = document.getElementById('course-description-overlay');
-
-        if (closeBtn) {
-          closeBtn.addEventListener('click', function(evt) {
-            evt.stopPropagation();
-            hideCourseInfo();
-          });
-        } else {
-          console.error('Close button not found');
-        }
-
-        if (overlay) {
-          overlay.addEventListener('click', function() {
-            hideCourseInfo();
-          });
-        } else {
-          console.error('Overlay not found');
-        }
       }
 
       // ===== Existing Pulse Behaviour for Hover =====
@@ -1663,22 +1495,6 @@
   </script>
 </svg>
 
-<!-- Course Description Pop-up -->
-<div id="course-description-overlay"></div>
-<div id="course-description-popup">
-  <button class="close-btn" aria-label="Close">×</button>
-  <h2>Course Name</h2>
-  <p>Course description will appear here.</p>
-</div>
 
-<script>
-  // Initialize popup event listeners after DOM is fully loaded
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initPopupEventListeners);
-  } else {
-    // DOM is already loaded
-    initPopupEventListeners();
-  }
-</script>
 
 </body></html>
