@@ -1196,11 +1196,15 @@
         return linked;
       }
 
+      // Track if this is the first course click
+      var isFirstClick = true;
+
       // Handle course click
       function handleCourseClick(courseName) {
         // If the same course is clicked again, reset the view
         if (selectedCourse === courseName) {
           resetCourseFilter();
+          isFirstClick = true;
           return;
         }
 
@@ -1216,7 +1220,12 @@
         updateCourseVisibility(visibleCoursesSet);
         updateConnectorVisibility(visibleCoursesSet);
         applyCourseSpecificHiding(courseName);
-        showCourseInfo(courseName);
+
+        // Only show popup on second click (not the first click)
+        if (!isFirstClick) {
+          showCourseInfo(courseName);
+        }
+        isFirstClick = false;
       }
 
       // Reset course filter to show all courses
@@ -1409,6 +1418,23 @@
         svgRoot.addEventListener('click', function() {
           resetCourseFilter();
         });
+
+        // Add event listeners for popup close button and overlay
+        var closeBtn = document.querySelector('#course-description-popup .close-btn');
+        var overlay = document.getElementById('course-description-overlay');
+
+        if (closeBtn) {
+          closeBtn.addEventListener('click', function(evt) {
+            evt.stopPropagation();
+            hideCourseInfo();
+          });
+        }
+
+        if (overlay) {
+          overlay.addEventListener('click', function() {
+            hideCourseInfo();
+          });
+        }
       }
 
       // ===== Existing Pulse Behaviour for Hover =====
@@ -1637,9 +1663,9 @@
 </svg>
 
 <!-- Course Description Pop-up -->
-<div id="course-description-overlay" onclick="hideCourseInfo()"></div>
+<div id="course-description-overlay"></div>
 <div id="course-description-popup">
-  <button class="close-btn" onclick="hideCourseInfo()" aria-label="Close">×</button>
+  <button class="close-btn" aria-label="Close">×</button>
   <h2>Course Name</h2>
   <p>Course description will appear here.</p>
 </div>
