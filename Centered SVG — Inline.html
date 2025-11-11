@@ -1128,13 +1128,23 @@
         resetCourseSpecificHiding();
       }
 
+      // Course labels that should always remain visible (non-clickable labels)
+      var ALWAYS_VISIBLE_COURSE_LABELS = [
+        'Developing the 3 C\'s',
+        'Team Leader'
+      ];
+
       // Update course visibility based on visible courses set
       function updateCourseVisibility(visibleCoursesSet) {
         var allCourseElements = document.querySelectorAll('[data-course]');
         for (var i = 0; i &lt; allCourseElements.length; i++) {
           var el = allCourseElements[i];
           var course = el.getAttribute('data-course');
-          if (visibleCoursesSet[course]) {
+
+          // Always show non-clickable course labels
+          if (ALWAYS_VISIBLE_COURSE_LABELS.indexOf(course) !== -1) {
+            el.style.display = '';
+          } else if (visibleCoursesSet[course]) {
             el.style.display = '';
           } else {
             el.style.display = 'none';
