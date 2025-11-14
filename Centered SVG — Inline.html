@@ -367,6 +367,110 @@
   .connector-duplicate-pl4 { stroke-opacity: 0; pointer-events: none; }
 
   .connector-duplicate-pl3 { stroke-opacity: 0; pointer-events: none; }
+
+  /* Skills Assessment Modal Styles */
+  .skills-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(32, 52, 86, 0.8);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .skills-modal.show {
+    display: flex;
+  }
+
+  .skills-modal-content {
+    background-color: #f6f6f6;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+  }
+
+  .skills-modal-header {
+    margin-bottom: 20px;
+  }
+
+  .skills-modal-title {
+    color: #203456;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 0 15px 0;
+  }
+
+  .skills-modal-description {
+    color: #4c6aa5;
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  .skills-modal-checklist-title {
+    color: #203456;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px 0 15px 0;
+  }
+
+  .skills-checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .skills-checklist-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+  }
+
+  .skills-checklist-item input[type="checkbox"] {
+    margin-right: 12px;
+    margin-top: 3px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .skills-checklist-item label {
+    color: #203456;
+    font-size: 15px;
+    line-height: 1.4;
+    cursor: pointer;
+    flex: 1;
+  }
+
+  .skills-modal-close {
+    background-color: #4c6aa5;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+    float: right;
+  }
+
+  .skills-modal-close:hover {
+    background-color: #6da4d9;
+  }
 </style>
 <rect class="st23" height="595.28" width="841.89"></rect>
 <!-- Duplicate copies of connectors associated with Accountancy Level 2.
@@ -993,6 +1097,18 @@
         'Data Engineer Level 5': ['connector-original-de5', 'connector-duplicate-de5']
       };
 
+      // Skills assessment checklist for each course
+      var SKILLS_ASSESSMENT = {
+        'Accountancy Level 3/4': [
+          'I help with monthly/year-end reports',
+          'I compile financial/accounting records',
+          'I work on tax returns, audit docs, or reconciliations',
+          'I provide financial information to others internally',
+          'I find ways to improve efficiency or add value',
+          'I analyse data for trends/insights to support decisions'
+        ]
+      };
+
       // Keep track of selected course
       var selectedCourse = null;
 
@@ -1020,6 +1136,12 @@
         // If the same course is clicked again, reset the view
         if (selectedCourse === courseName) {
           resetCourseFilter();
+          return;
+        }
+
+        // If a course is already selected and the clicked course has skills assessment, show modal
+        if (selectedCourse !== null &amp;&amp; SKILLS_ASSESSMENT[courseName]) {
+          showSkillsAssessmentModal(courseName);
           return;
         }
 
@@ -1118,6 +1240,86 @@
       // Simple placeholder for course information
       function showCourseInfo(courseName) {
         console.log('Course selected:', courseName);
+      }
+
+      // ===== Skills Assessment Modal Functions =====
+
+      // Show the skills assessment modal
+      function showSkillsAssessmentModal(courseName) {
+        var skills = SKILLS_ASSESSMENT[courseName];
+        if (!skills || skills.length === 0) {
+          console.log('No skills assessment available for:', courseName);
+          return;
+        }
+
+        var modal = document.getElementById('skillsModal');
+        var modalTitle = document.getElementById('modalCourseTitle');
+        var checklistTitle = document.getElementById('modalChecklistTitle');
+        var checklistContainer = document.getElementById('skillsChecklistContainer');
+
+        if (!modal || !modalTitle || !checklistTitle || !checklistContainer) {
+          console.error('Modal elements not found');
+          return;
+        }
+
+        // Set the course title
+        modalTitle.textContent = courseName;
+
+        // Set the checklist title
+        checklistTitle.textContent = 'Skills Assessment: ' + courseName;
+
+        // Clear existing checklist items
+        checklistContainer.innerHTML = '';
+
+        // Create checklist items
+        for (var i = 0; i &lt; skills.length; i++) {
+          var li = document.createElement('li');
+          li.className = 'skills-checklist-item';
+
+          var checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.id = 'skill-' + i;
+
+          var label = document.createElement('label');
+          label.setAttribute('for', 'skill-' + i);
+          label.textContent = skills[i];
+
+          li.appendChild(checkbox);
+          li.appendChild(label);
+          checklistContainer.appendChild(li);
+        }
+
+        // Show the modal
+        modal.classList.add('show');
+      }
+
+      // Hide the skills assessment modal
+      function hideSkillsAssessmentModal() {
+        var modal = document.getElementById('skillsModal');
+        if (modal) {
+          modal.classList.remove('show');
+        }
+      }
+
+      // Initialize modal close button and background click
+      function initSkillsModal() {
+        var modal = document.getElementById('skillsModal');
+        var closeBtn = document.getElementById('closeModalBtn');
+
+        if (closeBtn) {
+          closeBtn.addEventListener('click', function() {
+            hideSkillsAssessmentModal();
+          });
+        }
+
+        // Close modal when clicking outside the content
+        if (modal) {
+          modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+              hideSkillsAssessmentModal();
+            }
+          });
+        }
       }
 
       // Initialize course click filtering
@@ -1366,11 +1568,29 @@
         hoverPL3.addEventListener('mouseleave', removePulsePL3);
       }
 
-      // Initialize course click filtering
+      // Initialize course click filtering and skills modal
       initCourseClickFiltering();
+      initSkillsModal();
 })();
   </script>
 </svg>
 
+<!-- Skills Assessment Modal -->
+<div id="skillsModal" class="skills-modal">
+  <div class="skills-modal-content">
+    <div class="skills-modal-header">
+      <h2 id="modalCourseTitle" class="skills-modal-title"></h2>
+      <p class="skills-modal-description">
+        To move onto this course you will need to be demonstrating or have the opportunity to demonstrate the following skills in your current role:
+      </p>
+    </div>
+    <h3 id="modalChecklistTitle" class="skills-modal-checklist-title"></h3>
+    <p style="color: #4c6aa5; font-size: 14px; margin-bottom: 15px;">Please select all statements that apply to you:</p>
+    <ul id="skillsChecklistContainer" class="skills-checklist">
+      <!-- Checklist items will be dynamically inserted here -->
+    </ul>
+    <button id="closeModalBtn" class="skills-modal-close">Close</button>
+  </div>
+</div>
 
 </body></html>
