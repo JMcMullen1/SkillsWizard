@@ -8,6 +8,82 @@
     html, body { height: 100%; margin: 0; background: #fff; }
     body { display: flex; align-items: center; justify-content: center; }
     svg { max-width: 90vw; max-height: 90vh; width: 100%; height: auto; display: block; }
+
+    /* Landing Page Overlay Styles */
+    #landing-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(32, 52, 86, 0.95) 0%, rgba(76, 106, 165, 0.9) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease-out;
+    }
+
+    #landing-overlay.landing-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #landing-card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 50px 60px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      max-width: 600px;
+      width: 90%;
+    }
+
+    #landing-card h1 {
+      color: #203456;
+      font-size: 36px;
+      font-weight: bold;
+      margin: 0 0 20px 0;
+      line-height: 1.2;
+    }
+
+    #landing-card p {
+      color: #4c6aa5;
+      font-size: 18px;
+      line-height: 1.6;
+      margin: 0 0 30px 0;
+    }
+
+    #begin-wizard {
+      background: linear-gradient(135deg, #4c6aa5 0%, #4d9fa8 100%);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(76, 106, 165, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    #begin-wizard:hover,
+    #begin-wizard:focus {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(76, 106, 165, 0.6);
+      background: linear-gradient(135deg, #6da4d9 0%, #4d9fa8 100%);
+    }
+
+    #begin-wizard:focus {
+      outline: 2px solid #86679b;
+      outline-offset: 3px;
+    }
+
+    /* Blur effect applied to SVG when landing page is active */
+    body.landing-active svg {
+      filter: blur(4px);
+      transition: filter 0.3s ease;
+    }
   </style>
 </head>
 <body>
@@ -1592,5 +1668,69 @@
     <button id="closeModalBtn" class="skills-modal-close">Close</button>
   </div>
 </div>
+
+<!-- Landing Page Overlay -->
+<div id="landing-overlay" role="dialog" aria-modal="true" aria-labelledby="landing-title">
+  <div id="landing-card">
+    <h1 id="landing-title">Interactive Skills Wizard</h1>
+    <p>Click your current course of study to see your potential pathways</p>
+    <button id="begin-wizard" type="button">Begin</button>
+  </div>
+</div>
+
+<script>
+  // Landing page initialization and behavior
+  (function() {
+    'use strict';
+
+    // Wait for DOM to be fully loaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initLandingPage);
+    } else {
+      initLandingPage();
+    }
+
+    function initLandingPage() {
+      var overlay = document.getElementById('landing-overlay');
+      var beginButton = document.getElementById('begin-wizard');
+      var body = document.body;
+
+      // Apply landing-active state to body on page load
+      body.classList.add('landing-active');
+
+      // Set initial focus to the Begin button
+      if (beginButton) {
+        beginButton.focus();
+      }
+
+      // Handle Begin button click
+      if (beginButton) {
+        beginButton.addEventListener('click', dismissLanding);
+
+        // Handle keyboard events (Enter and Space)
+        beginButton.addEventListener('keydown', function(event) {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            dismissLanding();
+          }
+        });
+      }
+
+      // Function to dismiss the landing page
+      function dismissLanding() {
+        // Add the hidden class to trigger fade-out animation
+        overlay.classList.add('landing-hidden');
+
+        // Remove blur from SVG
+        body.classList.remove('landing-active');
+
+        // After transition ends, set display:none for performance and accessibility
+        setTimeout(function() {
+          overlay.style.display = 'none';
+        }, 600); // Match the transition duration in CSS (0.6s)
+      }
+    }
+  })();
+</script>
 
 </body></html>
