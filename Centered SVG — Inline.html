@@ -7,278 +7,10 @@
   <style>
     html, body { height: 100%; margin: 0; background: #fff; }
     body { display: flex; align-items: center; justify-content: center; }
-    svg { max-width: 90vw; max-height: 90vh; width: 100%; height: auto; display: block; transition: filter 0.5s ease; }
-
-    /* ===== Landing Screen Styles ===== */
-
-    /* Apply blur to SVG when landing is active */
-    body.landing-active svg {
-      filter: blur(4px);
-    }
-
-    /* Landing overlay - full screen */
-    #landing-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, rgba(32, 52, 86, 0.95) 0%, rgba(76, 106, 165, 0.92) 50%, rgba(77, 159, 168, 0.95) 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      opacity: 1;
-      transition: opacity 0.6s ease;
-    }
-
-    /* Fade out animation */
-    #landing-overlay.landing-hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* Central card container */
-    #landing-card {
-      background: rgba(32, 52, 86, 0.85);
-      border: 2px solid rgba(109, 164, 217, 0.4);
-      border-radius: 16px;
-      padding: 48px 64px;
-      max-width: 600px;
-      text-align: center;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
-                  0 0 0 1px rgba(255, 255, 255, 0.1) inset,
-                  0 0 40px rgba(109, 164, 217, 0.3);
-      backdrop-filter: blur(10px);
-    }
-
-    /* Title styling */
-    #landing-card h1 {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #ffffff;
-      margin: 0 0 24px 0;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-      letter-spacing: -0.5px;
-    }
-
-    /* Instruction text styling */
-    #landing-card p {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      font-size: 1.125rem;
-      color: #e8f1f8;
-      margin: 0 0 32px 0;
-      line-height: 1.6;
-    }
-
-    /* Begin button styling */
-    #begin-wizard {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: #ffffff;
-      background: linear-gradient(135deg, #4c6aa5 0%, #4d9fa8 100%);
-      border: none;
-      border-radius: 8px;
-      padding: 14px 48px;
-      cursor: pointer;
-      box-shadow: 0 4px 16px rgba(76, 106, 165, 0.4);
-      transition: all 0.3s ease;
-      outline: none;
-    }
-
-    #begin-wizard:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(76, 106, 165, 0.6);
-      background: linear-gradient(135deg, #5a7ab5 0%, #5dafb8 100%);
-    }
-
-    #begin-wizard:focus {
-      box-shadow: 0 0 0 3px rgba(109, 164, 217, 0.5), 0 6px 24px rgba(76, 106, 165, 0.6);
-    }
-
-    #begin-wizard:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 8px rgba(76, 106, 165, 0.4);
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      #landing-card {
-        padding: 32px 24px;
-        max-width: 90%;
-      }
-
-      #landing-card h1 {
-        font-size: 2rem;
-      }
-
-      #landing-card p {
-        font-size: 1rem;
-      }
-    }
-
-    /* ===== Skills Assessment Modal Styles ===== */
-
-    /* Modal overlay - full screen with semi-transparent background */
-    #skills-modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    #skills-modal-overlay.modal-visible {
-      display: flex;
-      opacity: 1;
-    }
-
-    /* Modal content container */
-    #skills-modal {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 32px;
-      max-width: 600px;
-      width: 90%;
-      max-height: 80vh;
-      overflow-y: auto;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      position: relative;
-    }
-
-    /* Close button */
-    #skills-modal-close {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: none;
-      border: none;
-      font-size: 28px;
-      color: #666;
-      cursor: pointer;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 4px;
-      transition: all 0.2s ease;
-    }
-
-    #skills-modal-close:hover {
-      background: #f0f0f0;
-      color: #333;
-    }
-
-    /* Modal title */
-    #skills-modal h2 {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: #2b3d6d;
-      margin: 0 0 16px 0;
-      padding-right: 32px;
-    }
-
-    /* Modal subtitle */
-    #skills-modal-intro {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      font-size: 1rem;
-      color: #555;
-      margin: 0 0 24px 0;
-      line-height: 1.5;
-    }
-
-    /* Skills assessment title */
-    #skills-modal-assessment-title {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #2b3d6d;
-      margin: 0 0 16px 0;
-    }
-
-    /* Checkbox container */
-    .skills-checkbox-item {
-      display: flex;
-      align-items: flex-start;
-      margin-bottom: 16px;
-      padding: 12px;
-      border-radius: 6px;
-      transition: background-color 0.2s ease;
-    }
-
-    .skills-checkbox-item:hover {
-      background-color: #f8f9fa;
-    }
-
-    .skills-checkbox-item input[type="checkbox"] {
-      margin: 4px 12px 0 0;
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    .skills-checkbox-item label {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      font-size: 1rem;
-      color: #333;
-      line-height: 1.5;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    /* Scrollbar styling for modal */
-    #skills-modal::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    #skills-modal::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 4px;
-    }
-
-    #skills-modal::-webkit-scrollbar-thumb {
-      background: #888;
-      border-radius: 4px;
-    }
-
-    #skills-modal::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    }
+    svg { max-width: 90vw; max-height: 90vh; width: 100%; height: auto; display: block; }
   </style>
 </head>
-<body class="landing-active">
-  <!-- Landing Screen Overlay -->
-  <div id="landing-overlay" role="dialog" aria-modal="true" aria-labelledby="landing-title">
-    <div id="landing-card">
-      <h1 id="landing-title">Interactive Skills Wizard</h1>
-      <p>Click your current course of study to see your potential pathways</p>
-      <button id="begin-wizard" aria-label="Begin interactive wizard">Begin</button>
-    </div>
-  </div>
-
-  <!-- Skills Assessment Modal -->
-  <div id="skills-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="skills-modal-title">
-    <div id="skills-modal">
-      <button id="skills-modal-close" aria-label="Close skills assessment">&times;</button>
-      <h2 id="skills-modal-title"></h2>
-      <p id="skills-modal-intro">To move onto this course you will need to be demonstrating or have the opportunity to demonstrate the following skills in your current role:</p>
-      <h3 id="skills-modal-assessment-title"></h3>
-      <div id="skills-modal-checklist"></div>
-    </div>
-  </div>
-
+<body>
 <!--?xml version="1.0" encoding="utf-8"?-->
 <svg id="Layer_1" version="1.1" viewBox="0 0 841.89 595.28" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <!-- Generator: Adobe Illustrator 29.8.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 2)  -->
@@ -711,28 +443,7 @@
 <path class="st24" d="M373.71,47.58l1.58-3.39c1.45.94,3.67,1.58,5.66,1.58,2.18,0,3-.58,3-1.48,0-2.67-9.84.06-9.84-6.45,0-3.09,2.79-5.27,7.54-5.27,2.24,0,4.73.51,6.27,1.42l-1.58,3.36c-1.61-.91-3.21-1.21-4.7-1.21-2.12,0-3.03.67-3.03,1.51,0,2.79,9.84.09,9.84,6.51,0,3.03-2.82,5.18-7.69,5.18-2.76,0-5.54-.76-7.06-1.76Z"></path>
 </g>
 </g>
-<g class="course-group" id="course-developing-3cs" data-course="Developing the 3 C&#39;s" style="">
-<g>
-<path class="st24" d="M27.86,27.9h9.63c6.94,0,11.69,4.18,11.69,10.6s-4.75,10.6-11.69,10.6h-9.63v-21.2ZM37.25,45.07c4.21,0,6.97-2.51,6.97-6.57s-2.76-6.57-6.97-6.57h-4.48v13.15h4.48Z"></path>
-<path class="st24" d="M69.3,45.16v3.94h-16.42v-21.2h16.02v3.94h-11.15v4.6h9.84v3.82h-9.84v4.91h11.54Z"></path>
-<path class="st24" d="M93.29,27.9l-9.18,21.2h-4.85l-9.15-21.2h5.3l6.45,15.14,6.54-15.14h4.88Z"></path>
-<path class="st24" d="M111.47,45.16v3.94h-16.42v-21.2h16.02v3.94h-11.15v4.6h9.84v3.82h-9.84v4.91h11.54Z"></path>
-<path class="st24" d="M115.38,27.9h4.91v17.2h10.63v4h-15.54v-21.2Z"></path>
-<path class="st24" d="M131.99,38.5c0-6.3,4.91-10.96,11.6-10.96s11.6,4.63,11.6,10.96-4.94,10.96-11.6,10.96-11.6-4.66-11.6-10.96ZM150.22,38.5c0-4.03-2.85-6.78-6.63-6.78s-6.63,2.76-6.63,6.78,2.85,6.78,6.63,6.78,6.63-2.76,6.63-6.78Z"></path>
-<path class="st24" d="M177.27,35.59c0,4.73-3.54,7.66-9.21,7.66h-4.27v5.85h-4.91v-21.2h9.18c5.66,0,9.21,2.94,9.21,7.69ZM172.31,35.59c0-2.33-1.51-3.7-4.51-3.7h-4v7.36h4c3,0,4.51-1.36,4.51-3.67Z"></path>
-<path class="st24" d="M180.76,27.9h4.91v21.2h-4.91v-21.2Z"></path>
-<path class="st24" d="M210.14,27.9v21.2h-4.03l-10.57-12.87v12.87h-4.85v-21.2h4.06l10.54,12.87v-12.87h4.85Z"></path>
-<path class="st24" d="M229.5,38.16h4.48v8.6c-2.33,1.76-5.54,2.7-8.57,2.7-6.66,0-11.57-4.57-11.57-10.96s4.91-10.96,11.66-10.96c3.73,0,6.81,1.27,8.87,3.67l-3.15,2.91c-1.54-1.64-3.33-2.39-5.48-2.39-4.12,0-6.94,2.76-6.94,6.78s2.82,6.78,6.88,6.78c1.33,0,2.57-.24,3.82-.91v-6.21Z"></path>
-<path class="st24" d="M251.5,31.89h-6.79v-4h18.48v4h-6.79v17.2h-4.91v-17.2Z"></path>
-<path class="st24" d="M285.28,27.9v21.2h-4.91v-8.69h-9.63v8.69h-4.91v-21.2h4.91v8.36h9.63v-8.36h4.91Z"></path>
-<path class="st24" d="M306.73,45.16v3.94h-16.42v-21.2h16.02v3.94h-11.15v4.6h9.84v3.82h-9.84v4.91h11.54Z"></path>
-<path class="st24" d="M333.54,42.62c0,3.57-2.76,6.85-8.78,6.85-2.97,0-6.03-.82-8.09-2.27l1.91-3.76c1.61,1.21,3.85,1.91,6.06,1.91,2.45,0,3.97-1,3.97-2.73,0-1.6-1.18-2.6-3.97-2.6h-2.24v-3.24l4.36-4.94h-9.03v-3.94h14.84v3.18l-4.79,5.45c3.82.61,5.75,2.97,5.75,6.09Z"></path>
-<path class="st24" d="M344.39,38.5c0-6.39,4.91-10.96,11.51-10.96,3.66,0,6.72,1.33,8.72,3.76l-3.15,2.91c-1.42-1.64-3.21-2.48-5.33-2.48-3.97,0-6.79,2.79-6.79,6.78s2.82,6.78,6.79,6.78c2.12,0,3.91-.85,5.33-2.51l3.15,2.91c-2,2.45-5.06,3.79-8.75,3.79-6.57,0-11.48-4.57-11.48-10.96Z"></path>
-<path class="st24" d="M372.62,29.29c0,.79-.12,1.36-.79,3.03l-1.76,4.36h-3l1.3-4.79c-.97-.42-1.6-1.33-1.6-2.6,0-1.76,1.27-2.91,2.94-2.91s2.91,1.18,2.91,2.91Z"></path>
-<path class="st24" d="M373.71,47.58l1.58-3.39c1.45.94,3.67,1.58,5.66,1.58,2.18,0,3-.58,3-1.48,0-2.67-9.84.06-9.84-6.45,0-3.09,2.79-5.27,7.54-5.27,2.24,0,4.73.51,6.27,1.42l-1.58,3.36c-1.61-.91-3.21-1.21-4.7-1.21-2.12,0-3.03.67-3.03,1.51,0,2.79,9.84.09,9.84,6.51,0,3.03-2.82,5.18-7.69,5.18-2.76,0-5.54-.76-7.06-1.76Z"></path>
-</g>
-</g>
-<g data-course="Team Leader" style="">
+<g data-course="Accountancy Level 2" style="">
 <path class="st24" d="M339.85,202.45h-4.02v-2.37h10.95v2.37h-4.02v10.19h-2.91v-10.19Z"></path>
 <path class="st24" d="M358.07,210.31v2.33h-9.73v-12.56h9.49v2.33h-6.6v2.73h5.83v2.26h-5.83v2.91h6.84Z"></path>
 <path class="st24" d="M368.66,209.95h-5.83l-1.11,2.69h-2.98l5.6-12.56h2.87l5.62,12.56h-3.05l-1.11-2.69ZM367.74,207.74l-1.99-4.81-1.99,4.81h3.98Z"></path>
@@ -945,7 +656,7 @@
 <path class="st30 pulse-target connector-original-l2" d="M618.93,109.04v-26.09c1.72-1.72,4.54-1.72,6.27,0l9.91,9.91c1.72,1.72,1.72,4.54,0,6.27l-9.91,9.91c-1.72,1.72-4.54,1.72-6.27,0Z" style=""></path>
 <!-- Add pulse-target class so this arrow also pulses when Accountancy Level 2 is hovered -->
 <path class="st28 pulse-target connector-original-l2" d="M193.84,190.92h26.09c1.72,1.72,1.72,4.54,0,6.27l-9.91,9.91c-1.72,1.72-4.54,1.72-6.27,0l-9.91-9.91c-1.72-1.72-1.72-4.54,0-6.27Z" style=""></path>
-<path class="st30" d="M819.81,164.85h-26.09c-1.72-1.72-1.72-4.54,0-6.27l9.91-9.91c1.72-1.72,4.54-1.72,6.27,0l9.91,9.91c1.72,1.72,1.72,4.54,0,6.27Z" style="display:none"></path>
+<path class="st30" data-course="accountancy-level-2" d="M819.81,164.85h-26.09c-1.72-1.72-1.72-4.54,0-6.27l9.91-9.91c1.72-1.72,4.54-1.72,6.27,0l9.91,9.91c1.72,1.72,1.72,4.54,0,6.27Z" style=""></path>
 <line class="st3 pulse-target connector-original-ba" x1="188.71" x2="583.1" y1="532.56" y2="532.56" style=""></line>
 <path class="st25 pulse-target connector-original-ba" d="M552.55,546.13v-26.09c1.72-1.72,4.54-1.72,6.27,0l9.91,9.91c1.72,1.72,1.72,4.54,0,6.27l-9.91,9.91c-1.72,1.72-4.54,1.72-6.27,0Z" style=""></path>
 <path class="st4 pulse-target connector-original-ba" d="M268.63,408.76h-41.1c-11.74,0-21.35,9.61-21.35,21.35v32.63s0,13.44,0,13.44c0,11.74-9.61,21.35-21.35,21.35" style=""></path>
@@ -1220,46 +931,6 @@
 <!-- Script to add or remove the pulsing highlight on connectors when hovering the Accountancy Level 2 box. -->
 <script type="text/ecmascript">
     (function() {
-      // ===== Landing Screen Logic =====
-
-      // Initialize landing screen on DOM load
-      var landingOverlay = document.getElementById('landing-overlay');
-      var beginButton = document.getElementById('begin-wizard');
-
-      // Function to dismiss the landing screen
-      function dismissLanding() {
-        // Remove landing-active class from body to remove blur
-        document.body.classList.remove('landing-active');
-
-        // Add landing-hidden class to overlay for fade-out animation
-        landingOverlay.classList.add('landing-hidden');
-
-        // After transition ends, hide completely and remove from accessibility tree
-        setTimeout(function() {
-          landingOverlay.style.display = 'none';
-          // Move focus to the document body
-          document.body.focus();
-        }, 600); // Match the CSS transition duration
-      }
-
-      // Handle Begin button click
-      if (beginButton) {
-        beginButton.addEventListener('click', dismissLanding);
-
-        // Handle keyboard events (Enter and Space)
-        beginButton.addEventListener('keydown', function(e) {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            dismissLanding();
-          }
-        });
-
-        // Set initial focus to the Begin button
-        setTimeout(function() {
-          beginButton.focus();
-        }, 100);
-      }
-
       // ===== Course Progression and Click Filtering Logic =====
 
       // Course progression pathways (same logic as Test Three C's Standalone)
@@ -1298,114 +969,6 @@
         }
       };
 
-      // Skills assessment questions for each course
-      var BRIDGE_QUESTIONS = {
-        'Accountancy Level 2': [
-          { id: 'acc2_q1', text: 'I work with financial records (e.g. invoices, statements)', type: 'checkbox' },
-          { id: 'acc2_q2', text: 'I\'ve found and corrected errors in financial data', type: 'checkbox' },
-          { id: 'acc2_q3', text: 'I use accounting software (e.g. Sage, Xero)', type: 'checkbox' },
-          { id: 'acc2_q4', text: 'I check the accuracy of financial data', type: 'checkbox' },
-          { id: 'acc2_q5', text: 'I work well under time pressure', type: 'checkbox' },
-          { id: 'acc2_q6', text: 'I explain finance info to non-finance colleagues', type: 'checkbox' }
-        ],
-        'Accountancy Level 3/4': [
-          { id: 'acc34_q1', text: 'I help with monthly/year-end reports', type: 'checkbox' },
-          { id: 'acc34_q2', text: 'I compile financial/accounting records', type: 'checkbox' },
-          { id: 'acc34_q3', text: 'I work on tax returns, audit docs, or reconciliations', type: 'checkbox' },
-          { id: 'acc34_q4', text: 'I provide financial information to others internally', type: 'checkbox' },
-          { id: 'acc34_q5', text: 'I find ways to improve efficiency or add value', type: 'checkbox' },
-          { id: 'acc34_q6', text: 'I analyse data for trends/insights to support decisions', type: 'checkbox' }
-        ],
-        'Business Admin Level 3': [
-          { id: 'ba3_q1', text: 'I handle phone calls, emails, and data entry', type: 'checkbox' },
-          { id: 'ba3_q2', text: 'I arrange meetings or plan logistics (e.g. training/events)', type: 'checkbox' },
-          { id: 'ba3_q3', text: 'I work with both internal and external stakeholders', type: 'checkbox' },
-          { id: 'ba3_q4', text: 'I use IT systems beyond Outlook/Word/Excel', type: 'checkbox' },
-          { id: 'ba3_q5', text: 'I prepare reports or documents regularly', type: 'checkbox' },
-          { id: 'ba3_q6', text: 'I support projects or manage timelines', type: 'checkbox' }
-        ],
-        'Procurement Level 3': [
-          { id: 'proc3_q1', text: 'I conduct market research to support sourcing decisions', type: 'checkbox' },
-          { id: 'proc3_q2', text: 'I help with supplier due diligence (e.g. financial checks, policies)', type: 'checkbox' },
-          { id: 'proc3_q3', text: 'I advise colleagues on procurement procedures', type: 'checkbox' },
-          { id: 'proc3_q4', text: 'I raise purchase orders for low value/risk contracts', type: 'checkbox' },
-          { id: 'proc3_q5', text: 'I use e-procurement systems (tendering, evaluations, logging)', type: 'checkbox' },
-          { id: 'proc3_q6', text: 'I participate in contract negotiations', type: 'checkbox' }
-        ],
-        'Procurement Level 4': [
-          { id: 'proc4_q1', text: 'I manage suppliers to ensure successful delivery', type: 'checkbox' },
-          { id: 'proc4_q2', text: 'I negotiate with suppliers or stakeholders', type: 'checkbox' },
-          { id: 'proc4_q3', text: 'I help agree contract terms and conditions', type: 'checkbox' },
-          { id: 'proc4_q4', text: 'I contribute to procurement strategy', type: 'checkbox' },
-          { id: 'proc4_q5', text: 'I carry out tendering activity to ensure value for money', type: 'checkbox' },
-          { id: 'proc4_q6', text: 'I analyse markets and suppliers', type: 'checkbox' }
-        ],
-        'Data Technician Level 3': [
-          { id: 'dt3_q1', text: 'I currently use Excel (basic or advanced functions)', type: 'checkbox' },
-          { id: 'dt3_q2', text: 'I have used databases (e.g. Access, SQL)', type: 'checkbox' },
-          { id: 'dt3_q3', text: 'I regularly access and use data sources in my role', type: 'checkbox' },
-          { id: 'dt3_q4', text: 'I understand the variety and complexity of the data I work with', type: 'checkbox' },
-          { id: 'dt3_q5', text: 'I am comfortable identifying patterns or trends in data', type: 'checkbox' },
-          { id: 'dt3_q6', text: 'I have used Power BI or another data visualisation tool', type: 'checkbox' }
-        ],
-        'Data Analyst Level 4': [
-          { id: 'da4_q1', text: 'I have used Power BI, Python, SQL, or advanced Excel', type: 'checkbox' },
-          { id: 'da4_q2', text: 'I can give an example of how I\'ve used Excel for analysis', type: 'checkbox' },
-          { id: 'da4_q3', text: 'I understand programming or statistical techniques', type: 'checkbox' },
-          { id: 'da4_q4', text: 'I work with data that is complex or comes from multiple sources', type: 'checkbox' },
-          { id: 'da4_q5', text: 'I work with large volumes of data (many records/columns/tables)', type: 'checkbox' },
-          { id: 'da4_q6', text: 'I am confident in learning more advanced tools (e.g. data modelling)', type: 'checkbox' }
-        ],
-        'Data Engineer Level 5': [
-          { id: 'de5_q1', text: 'I have experience with cloud services for data storage/processing', type: 'checkbox' },
-          { id: 'de5_q2', text: 'I can explain how I ensure data consistency in ETL processes', type: 'checkbox' },
-          { id: 'de5_q3', text: 'I\'ve optimised a complex SQL query', type: 'checkbox' },
-          { id: 'de5_q4', text: 'I work with data pipelines or data warehousing', type: 'checkbox' },
-          { id: 'de5_q5', text: 'I have experience with programming languages (Python, Java, etc.)', type: 'checkbox' },
-          { id: 'de5_q6', text: 'I understand data governance and security principles', type: 'checkbox' }
-        ],
-        'Team Leader': [
-          { id: 'tl_q1', text: 'I lead or manage a team', type: 'checkbox' },
-          { id: 'tl_q2', text: 'I manage resources to meet deadlines and budgets', type: 'checkbox' },
-          { id: 'tl_q3', text: 'I set and monitor team objectives and performance', type: 'checkbox' },
-          { id: 'tl_q4', text: 'I support the training and development of team members', type: 'checkbox' },
-          { id: 'tl_q5', text: 'I communicate clearly to improve team and business performance', type: 'checkbox' },
-          { id: 'tl_q6', text: 'I resolve conflicts and motivate team members', type: 'checkbox' }
-        ],
-        'Project Manager': [
-          { id: 'pm_q1', text: 'I support project teams across the project lifecycle', type: 'checkbox' },
-          { id: 'pm_q2', text: 'I review business cases and provide feedback', type: 'checkbox' },
-          { id: 'pm_q3', text: 'I assist with stakeholder engagement and communication', type: 'checkbox' },
-          { id: 'pm_q4', text: 'I help write and update project scope documents', type: 'checkbox' },
-          { id: 'pm_q5', text: 'I identify and manage risks/opportunities', type: 'checkbox' },
-          { id: 'pm_q6', text: 'I monitor and report on budgets and spending', type: 'checkbox' }
-        ],
-        'Improvement Practitioner': [
-          { id: 'ip_q1', text: 'I identify opportunities for process improvement', type: 'checkbox' },
-          { id: 'ip_q2', text: 'I use improvement methodologies (e.g. Lean, Six Sigma)', type: 'checkbox' },
-          { id: 'ip_q3', text: 'I analyse data to find inefficiencies', type: 'checkbox' },
-          { id: 'ip_q4', text: 'I facilitate workshops or improvement sessions', type: 'checkbox' },
-          { id: 'ip_q5', text: 'I measure the impact of improvement initiatives', type: 'checkbox' },
-          { id: 'ip_q6', text: 'I engage stakeholders in continuous improvement', type: 'checkbox' }
-        ],
-        'Business Analyst': [
-          { id: 'bsa_q1', text: 'I use tools like Excel, Visio, JIRA, or project frameworks (e.g. Agile)', type: 'checkbox' },
-          { id: 'bsa_q2', text: 'I gather stakeholder requirements and clarify expectations', type: 'checkbox' },
-          { id: 'bsa_q3', text: 'I apply structured investigation techniques to identify issues', type: 'checkbox' },
-          { id: 'bsa_q4', text: 'I help develop recommendations for change', type: 'checkbox' },
-          { id: 'bsa_q5', text: 'I can model business processes using diagrams or tools', type: 'checkbox' },
-          { id: 'bsa_q6', text: 'I gather requirements through interviews or workshops', type: 'checkbox' }
-        ],
-        'CIPS Level 5': [
-          { id: 'cips5_q1', text: 'I have advanced procurement experience', type: 'checkbox' },
-          { id: 'cips5_q2', text: 'I develop procurement strategies', type: 'checkbox' },
-          { id: 'cips5_q3', text: 'I manage complex supplier relationships', type: 'checkbox' },
-          { id: 'cips5_q4', text: 'I lead procurement projects', type: 'checkbox' },
-          { id: 'cips5_q5', text: 'I understand contract law and commercial agreements', type: 'checkbox' },
-          { id: 'cips5_q6', text: 'I provide strategic procurement advice', type: 'checkbox' }
-        ]
-      };
-
       // Map SVG node IDs to course names
       var SVG_COURSE_NODE_MAP = {
         'accountancy-level-2': 'Accountancy Level 2',
@@ -1417,17 +980,6 @@
         'data-analyst-level-4': 'Data Analyst Level 4',
         'data-engineer-level-5': 'Data Engineer Level 5'
       };
-
-      // Normalize data-course attribute values to match course names in PROGRESSION_PATHWAYS
-      // This ensures elements with lowercase-hyphenated data-course attributes match properly
-      function normalizeCourseAttribute(dataCourseValue) {
-        // If it's already in the SVG_COURSE_NODE_MAP, convert it
-        if (SVG_COURSE_NODE_MAP[dataCourseValue]) {
-          return SVG_COURSE_NODE_MAP[dataCourseValue];
-        }
-        // Otherwise return as-is (handles Title Case format)
-        return dataCourseValue;
-      }
 
       // Map course names to connector classes
       var COURSE_CONNECTOR_CLASSES = {
@@ -1441,135 +993,8 @@
         'Data Engineer Level 5': ['connector-original-de5', 'connector-duplicate-de5']
       };
 
-      // ===== Course-Specific Element Hiding Rules =====
-      // Map course names to specific elements that should be hidden when that course is clicked
-      // Each entry contains an array of CSS selectors for elements to hide
-      var COURSE_SPECIFIC_ELEMENTS_TO_HIDE = {
-        // When Business Admin Level 3 is clicked, hide these specific connector elements
-        'Business Admin Level 3': [
-          'path.st25.pulse-target.connector-original-pl3[d^="M679.96,470.14"]',
-          'path.st30.pulse-target.connector-original-pl3[d^="M798.94,191.98"]'
-        ],
-
-        // Add rules for other courses here as needed
-        'Accountancy Level 2': [
-          // Example: 'line.example-class[x1="123"]'
-        ],
-
-        'Accountancy Level 3/4': [
-          // Add specific elements to hide for this course
-        ],
-
-        'Procurement Level 3': [
-          // Add specific elements to hide for this course
-        ],
-
-        'Procurement Level 4': [
-          // Add specific elements to hide for this course
-        ],
-
-        'Data Technician Level 3': [
-          // Add specific elements to hide for this course
-        ],
-
-        'Data Analyst Level 4': [
-          // Add specific elements to hide for this course
-        ],
-
-        'Data Engineer Level 5': [
-          // Add specific elements to hide for this course
-        ]
-      };
-
       // Keep track of selected course
       var selectedCourse = null;
-
-      // ===== Skills Assessment Modal Functions =====
-
-      // Show skills assessment modal for a course
-      function showSkillsAssessment(courseName) {
-        var modalOverlay = document.getElementById('skills-modal-overlay');
-        var modalTitle = document.getElementById('skills-modal-title');
-        var modalAssessmentTitle = document.getElementById('skills-modal-assessment-title');
-        var modalChecklist = document.getElementById('skills-modal-checklist');
-
-        if (!modalOverlay || !modalTitle || !modalAssessmentTitle || !modalChecklist) return;
-
-        // Set the course title
-        modalTitle.textContent = courseName;
-
-        // Set the assessment title
-        modalAssessmentTitle.textContent = 'Skills Assessment: ' + courseName;
-
-        // Clear previous checklist
-        modalChecklist.innerHTML = '';
-
-        // Get questions for this course
-        var questions = BRIDGE_QUESTIONS[courseName];
-        if (!questions || questions.length === 0) {
-          modalChecklist.innerHTML = '<p style="color: #666;">No skills assessment available for this course.</p>';
-        } else {
-          // Add subtitle
-          var subtitle = document.createElement('p');
-          subtitle.style.marginBottom = '16px';
-          subtitle.style.color = '#666';
-          subtitle.textContent = 'Please select all statements that apply to you:';
-          modalChecklist.appendChild(subtitle);
-
-          // Create checkbox items
-          questions.forEach(function(question) {
-            var itemDiv = document.createElement('div');
-            itemDiv.className = 'skills-checkbox-item';
-
-            var checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.id = question.id;
-            checkbox.name = question.id;
-
-            var label = document.createElement('label');
-            label.htmlFor = question.id;
-            label.textContent = question.text;
-
-            itemDiv.appendChild(checkbox);
-            itemDiv.appendChild(label);
-            modalChecklist.appendChild(itemDiv);
-          });
-        }
-
-        // Show the modal
-        modalOverlay.classList.add('modal-visible');
-      }
-
-      // Close skills assessment modal
-      function closeSkillsAssessment() {
-        var modalOverlay = document.getElementById('skills-modal-overlay');
-        if (modalOverlay) {
-          modalOverlay.classList.remove('modal-visible');
-        }
-      }
-
-      // Initialize modal close button
-      var modalCloseButton = document.getElementById('skills-modal-close');
-      if (modalCloseButton) {
-        modalCloseButton.addEventListener('click', closeSkillsAssessment);
-      }
-
-      // Close modal when clicking outside
-      var modalOverlay = document.getElementById('skills-modal-overlay');
-      if (modalOverlay) {
-        modalOverlay.addEventListener('click', function(e) {
-          if (e.target === modalOverlay) {
-            closeSkillsAssessment();
-          }
-        });
-      }
-
-      // Close modal on Escape key
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          closeSkillsAssessment();
-        }
-      });
 
       // Get linked courses for a given course
       function getLinkedCourses(courseName) {
@@ -1598,14 +1023,6 @@
           return;
         }
 
-        // If a course is already selected (view is filtered), and user clicks on a different course,
-        // show the skills assessment modal for that course instead of filtering
-        if (selectedCourse !== null && selectedCourse !== courseName) {
-          showSkillsAssessment(courseName);
-          return;
-        }
-
-        // First click: filter the view to show progression pathways
         selectedCourse = courseName;
         var linkedCourses = getLinkedCourses(courseName);
         var visibleCoursesSet = {};
@@ -1617,7 +1034,6 @@
 
         updateCourseVisibility(visibleCoursesSet);
         updateConnectorVisibility(visibleCoursesSet);
-        applyCourseSpecificHiding(courseName);
         showCourseInfo(courseName);
       }
 
@@ -1641,16 +1057,7 @@
             }
           }
         }
-
-        // Reset course-specific hidden elements
-        resetCourseSpecificHiding();
       }
-
-      // Course labels that should always remain visible (non-clickable labels)
-      var ALWAYS_VISIBLE_COURSE_LABELS = [
-        'Developing the 3 C\'s',
-        'Team Leader'
-      ];
 
       // Update course visibility based on visible courses set
       function updateCourseVisibility(visibleCoursesSet) {
@@ -1658,12 +1065,7 @@
         for (var i = 0; i &lt; allCourseElements.length; i++) {
           var el = allCourseElements[i];
           var course = el.getAttribute('data-course');
-          var normalizedCourse = normalizeCourseAttribute(course);
-
-          // Always show non-clickable course labels
-          if (ALWAYS_VISIBLE_COURSE_LABELS.indexOf(course) !== -1) {
-            el.style.display = '';
-          } else if (visibleCoursesSet[normalizedCourse]) {
+          if (visibleCoursesSet[course]) {
             el.style.display = '';
           } else {
             el.style.display = 'none';
@@ -1708,42 +1110,6 @@
             var elements = document.querySelectorAll('.' + classes[j]);
             for (var k = 0; k &lt; elements.length; k++) {
               elements[k].style.display = isVisible ? '' : 'none';
-            }
-          }
-        }
-      }
-
-      // Apply course-specific element hiding rules
-      function applyCourseSpecificHiding(courseName) {
-        var selectors = COURSE_SPECIFIC_ELEMENTS_TO_HIDE[courseName];
-        if (selectors &amp;&amp; selectors.length &gt; 0) {
-          for (var i = 0; i &lt; selectors.length; i++) {
-            var selector = selectors[i];
-            // Skip empty selectors or comments
-            if (selector &amp;&amp; typeof selector === 'string' &amp;&amp; selector.indexOf('//') !== 0) {
-              var elements = document.querySelectorAll(selector);
-              for (var j = 0; j &lt; elements.length; j++) {
-                elements[j].style.display = 'none';
-              }
-            }
-          }
-        }
-      }
-
-      // Reset all course-specific hidden elements
-      function resetCourseSpecificHiding() {
-        for (var course in COURSE_SPECIFIC_ELEMENTS_TO_HIDE) {
-          var selectors = COURSE_SPECIFIC_ELEMENTS_TO_HIDE[course];
-          if (selectors &amp;&amp; selectors.length &gt; 0) {
-            for (var i = 0; i &lt; selectors.length; i++) {
-              var selector = selectors[i];
-              // Skip empty selectors or comments
-              if (selector &amp;&amp; typeof selector === 'string' &amp;&amp; selector.indexOf('//') !== 0) {
-                var elements = document.querySelectorAll(selector);
-                for (var j = 0; j &lt; elements.length; j++) {
-                  elements[j].style.display = '';
-                }
-              }
             }
           }
         }
@@ -2005,7 +1371,6 @@
 })();
   </script>
 </svg>
-
 
 
 </body></html>
