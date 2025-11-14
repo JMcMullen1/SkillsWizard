@@ -118,6 +118,162 @@
         font-size: 1rem;
       }
     }
+
+    /* ===== Skills Assessment Popup Styles ===== */
+
+    /* Apply blur to SVG when skills popup is active */
+    body.skills-popup-active svg {
+      filter: blur(4px);
+    }
+
+    /* Skills assessment overlay */
+    #skills-assessment-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(32, 52, 86, 0.95) 0%, rgba(76, 106, 165, 0.92) 50%, rgba(77, 159, 168, 0.95) 100%);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    #skills-assessment-overlay.skills-visible {
+      display: flex;
+      opacity: 1;
+    }
+
+    /* Skills assessment card */
+    #skills-assessment-card {
+      background: rgba(32, 52, 86, 0.85);
+      border: 2px solid rgba(109, 164, 217, 0.4);
+      border-radius: 16px;
+      padding: 40px 48px;
+      max-width: 650px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                  0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+                  0 0 40px rgba(109, 164, 217, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    #skills-assessment-card h2 {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0 0 16px 0;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      letter-spacing: -0.5px;
+    }
+
+    #skills-assessment-card h3 {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin: 24px 0 16px 0;
+    }
+
+    #skills-assessment-card p {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1rem;
+      color: #e8f1f8;
+      margin: 0 0 24px 0;
+      line-height: 1.6;
+    }
+
+    /* Skills checklist */
+    .skills-checklist {
+      margin: 24px 0;
+    }
+
+    .skill-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      transition: background 0.2s ease;
+    }
+
+    .skill-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .skill-item input[type="checkbox"] {
+      margin-right: 12px;
+      margin-top: 4px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .skill-item label {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1rem;
+      color: #e8f1f8;
+      cursor: pointer;
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    /* Close button */
+    #close-skills-popup {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #ffffff;
+      background: linear-gradient(135deg, #4c6aa5 0%, #4d9fa8 100%);
+      border: none;
+      border-radius: 8px;
+      padding: 12px 32px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(76, 106, 165, 0.4);
+      transition: all 0.3s ease;
+      outline: none;
+      margin-top: 24px;
+      width: 100%;
+    }
+
+    #close-skills-popup:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(76, 106, 165, 0.6);
+      background: linear-gradient(135deg, #5a7ab5 0%, #5dafb8 100%);
+    }
+
+    #close-skills-popup:focus {
+      box-shadow: 0 0 0 3px rgba(109, 164, 217, 0.5), 0 6px 24px rgba(76, 106, 165, 0.6);
+    }
+
+    #close-skills-popup:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(76, 106, 165, 0.4);
+    }
+
+    /* Responsive adjustments for skills popup */
+    @media (max-width: 768px) {
+      #skills-assessment-card {
+        padding: 24px;
+        max-width: 90%;
+        max-height: 90vh;
+      }
+
+      #skills-assessment-card h2 {
+        font-size: 1.5rem;
+      }
+
+      #skills-assessment-card h3 {
+        font-size: 1.125rem;
+      }
+    }
   </style>
 </head>
 <body class="landing-active">
@@ -127,6 +283,20 @@
       <h1 id="landing-title">Interactive Skills Wizard</h1>
       <p>Click your current course of study to see your potential pathways</p>
       <button id="begin-wizard" aria-label="Begin interactive wizard">Begin</button>
+    </div>
+  </div>
+
+  <!-- Skills Assessment Popup -->
+  <div id="skills-assessment-overlay" role="dialog" aria-modal="true" aria-labelledby="skills-title">
+    <div id="skills-assessment-card">
+      <h2 id="skills-title"></h2>
+      <p id="skills-intro-text">To move onto this course you will need to be demonstrating or have the opportunity to demonstrate the following skills in your current role</p>
+      <h3>Skills Assessment: <span id="skills-course-name"></span></h3>
+      <p>Please select all statements that apply to you:</p>
+      <div class="skills-checklist" id="skills-checklist">
+        <!-- Skills will be dynamically populated here -->
+      </div>
+      <button id="close-skills-popup" aria-label="Close skills assessment">Close</button>
     </div>
   </div>
 
@@ -1111,6 +1281,98 @@
         }, 100);
       }
 
+      // ===== Skills Assessment Popup Logic =====
+
+      // Skills assessment data for each course
+      var COURSE_SKILLS = {
+        'Accountancy Level 3/4': [
+          'I help with monthly/year-end reports',
+          'I compile financial/accounting records',
+          'I work on tax returns, audit docs, or reconciliations',
+          'I provide financial information to others internally',
+          'I find ways to improve efficiency or add value',
+          'I analyse data for trends/insights to support decisions'
+        ]
+        // Add more courses here as needed
+      };
+
+      var skillsOverlay = document.getElementById('skills-assessment-overlay');
+      var skillsTitle = document.getElementById('skills-title');
+      var skillsCourseName = document.getElementById('skills-course-name');
+      var skillsChecklist = document.getElementById('skills-checklist');
+      var closeSkillsButton = document.getElementById('close-skills-popup');
+
+      // Function to show skills assessment popup
+      function showSkillsAssessment(courseName) {
+        var skills = COURSE_SKILLS[courseName];
+        if (!skills) {
+          console.log('No skills assessment available for:', courseName);
+          return;
+        }
+
+        // Set course title
+        skillsTitle.textContent = courseName;
+        skillsCourseName.textContent = courseName;
+
+        // Clear previous skills
+        skillsChecklist.innerHTML = '';
+
+        // Populate skills checklist
+        for (var i = 0; i < skills.length; i++) {
+          var skillItem = document.createElement('div');
+          skillItem.className = 'skill-item';
+
+          var checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.id = 'skill-' + i;
+
+          var label = document.createElement('label');
+          label.htmlFor = 'skill-' + i;
+          label.textContent = skills[i];
+
+          skillItem.appendChild(checkbox);
+          skillItem.appendChild(label);
+          skillsChecklist.appendChild(skillItem);
+        }
+
+        // Show the popup
+        document.body.classList.add('skills-popup-active');
+        skillsOverlay.classList.add('skills-visible');
+
+        // Focus on close button
+        setTimeout(function() {
+          closeSkillsButton.focus();
+        }, 100);
+      }
+
+      // Function to close skills assessment popup
+      function closeSkillsAssessment() {
+        document.body.classList.remove('skills-popup-active');
+        skillsOverlay.classList.remove('skills-visible');
+      }
+
+      // Handle close button click
+      if (closeSkillsButton) {
+        closeSkillsButton.addEventListener('click', closeSkillsAssessment);
+
+        // Handle keyboard events (Enter and Space)
+        closeSkillsButton.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            closeSkillsAssessment();
+          }
+        });
+      }
+
+      // Close popup when clicking outside the card
+      if (skillsOverlay) {
+        skillsOverlay.addEventListener('click', function(e) {
+          if (e.target === skillsOverlay) {
+            closeSkillsAssessment();
+          }
+        });
+      }
+
       // ===== Course Progression and Click Filtering Logic =====
 
       // Course progression pathways (same logic as Test Three C's Standalone)
@@ -1254,6 +1516,14 @@
           return;
         }
 
+        // If a course is already selected (filtering is active) and a different course is clicked,
+        // show the skills assessment popup instead of filtering
+        if (selectedCourse !== null && selectedCourse !== courseName) {
+          showSkillsAssessment(courseName);
+          return;
+        }
+
+        // First click: filter the view to show pathways
         selectedCourse = courseName;
         var linkedCourses = getLinkedCourses(courseName);
         var visibleCoursesSet = {};
@@ -1426,3 +1696,13 @@
         // Optional: clicking on empty space resets the view
         svgRoot.addEventListener('click', function() {
           resetCourseFilter();
+        });
+      }
+
+      // Initialize click filtering when DOM is ready
+      initCourseClickFiltering();
+
+    })();
+</script>
+
+</body></html>
