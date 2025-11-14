@@ -118,6 +118,144 @@
         font-size: 1rem;
       }
     }
+
+    /* ===== Skills Assessment Modal Styles ===== */
+
+    /* Modal overlay - full screen with semi-transparent background */
+    #skills-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #skills-modal-overlay.modal-visible {
+      display: flex;
+      opacity: 1;
+    }
+
+    /* Modal content container */
+    #skills-modal {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 32px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    /* Close button */
+    #skills-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 28px;
+      color: #666;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+
+    #skills-modal-close:hover {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    /* Modal title */
+    #skills-modal h2 {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #2b3d6d;
+      margin: 0 0 16px 0;
+      padding-right: 32px;
+    }
+
+    /* Modal subtitle */
+    #skills-modal-intro {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1rem;
+      color: #555;
+      margin: 0 0 24px 0;
+      line-height: 1.5;
+    }
+
+    /* Skills assessment title */
+    #skills-modal-assessment-title {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #2b3d6d;
+      margin: 0 0 16px 0;
+    }
+
+    /* Checkbox container */
+    .skills-checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      padding: 12px;
+      border-radius: 6px;
+      transition: background-color 0.2s ease;
+    }
+
+    .skills-checkbox-item:hover {
+      background-color: #f8f9fa;
+    }
+
+    .skills-checkbox-item input[type="checkbox"] {
+      margin: 4px 12px 0 0;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .skills-checkbox-item label {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1rem;
+      color: #333;
+      line-height: 1.5;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Scrollbar styling for modal */
+    #skills-modal::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #skills-modal::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    #skills-modal::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+    }
+
+    #skills-modal::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
   </style>
 </head>
 <body class="landing-active">
@@ -127,6 +265,17 @@
       <h1 id="landing-title">Interactive Skills Wizard</h1>
       <p>Click your current course of study to see your potential pathways</p>
       <button id="begin-wizard" aria-label="Begin interactive wizard">Begin</button>
+    </div>
+  </div>
+
+  <!-- Skills Assessment Modal -->
+  <div id="skills-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="skills-modal-title">
+    <div id="skills-modal">
+      <button id="skills-modal-close" aria-label="Close skills assessment">&times;</button>
+      <h2 id="skills-modal-title"></h2>
+      <p id="skills-modal-intro">To move onto this course you will need to be demonstrating or have the opportunity to demonstrate the following skills in your current role:</p>
+      <h3 id="skills-modal-assessment-title"></h3>
+      <div id="skills-modal-checklist"></div>
     </div>
   </div>
 
@@ -1149,6 +1298,114 @@
         }
       };
 
+      // Skills assessment questions for each course
+      var BRIDGE_QUESTIONS = {
+        'Accountancy Level 2': [
+          { id: 'acc2_q1', text: 'I work with financial records (e.g. invoices, statements)', type: 'checkbox' },
+          { id: 'acc2_q2', text: 'I\'ve found and corrected errors in financial data', type: 'checkbox' },
+          { id: 'acc2_q3', text: 'I use accounting software (e.g. Sage, Xero)', type: 'checkbox' },
+          { id: 'acc2_q4', text: 'I check the accuracy of financial data', type: 'checkbox' },
+          { id: 'acc2_q5', text: 'I work well under time pressure', type: 'checkbox' },
+          { id: 'acc2_q6', text: 'I explain finance info to non-finance colleagues', type: 'checkbox' }
+        ],
+        'Accountancy Level 3/4': [
+          { id: 'acc34_q1', text: 'I help with monthly/year-end reports', type: 'checkbox' },
+          { id: 'acc34_q2', text: 'I compile financial/accounting records', type: 'checkbox' },
+          { id: 'acc34_q3', text: 'I work on tax returns, audit docs, or reconciliations', type: 'checkbox' },
+          { id: 'acc34_q4', text: 'I provide financial information to others internally', type: 'checkbox' },
+          { id: 'acc34_q5', text: 'I find ways to improve efficiency or add value', type: 'checkbox' },
+          { id: 'acc34_q6', text: 'I analyse data for trends/insights to support decisions', type: 'checkbox' }
+        ],
+        'Business Admin Level 3': [
+          { id: 'ba3_q1', text: 'I handle phone calls, emails, and data entry', type: 'checkbox' },
+          { id: 'ba3_q2', text: 'I arrange meetings or plan logistics (e.g. training/events)', type: 'checkbox' },
+          { id: 'ba3_q3', text: 'I work with both internal and external stakeholders', type: 'checkbox' },
+          { id: 'ba3_q4', text: 'I use IT systems beyond Outlook/Word/Excel', type: 'checkbox' },
+          { id: 'ba3_q5', text: 'I prepare reports or documents regularly', type: 'checkbox' },
+          { id: 'ba3_q6', text: 'I support projects or manage timelines', type: 'checkbox' }
+        ],
+        'Procurement Level 3': [
+          { id: 'proc3_q1', text: 'I conduct market research to support sourcing decisions', type: 'checkbox' },
+          { id: 'proc3_q2', text: 'I help with supplier due diligence (e.g. financial checks, policies)', type: 'checkbox' },
+          { id: 'proc3_q3', text: 'I advise colleagues on procurement procedures', type: 'checkbox' },
+          { id: 'proc3_q4', text: 'I raise purchase orders for low value/risk contracts', type: 'checkbox' },
+          { id: 'proc3_q5', text: 'I use e-procurement systems (tendering, evaluations, logging)', type: 'checkbox' },
+          { id: 'proc3_q6', text: 'I participate in contract negotiations', type: 'checkbox' }
+        ],
+        'Procurement Level 4': [
+          { id: 'proc4_q1', text: 'I manage suppliers to ensure successful delivery', type: 'checkbox' },
+          { id: 'proc4_q2', text: 'I negotiate with suppliers or stakeholders', type: 'checkbox' },
+          { id: 'proc4_q3', text: 'I help agree contract terms and conditions', type: 'checkbox' },
+          { id: 'proc4_q4', text: 'I contribute to procurement strategy', type: 'checkbox' },
+          { id: 'proc4_q5', text: 'I carry out tendering activity to ensure value for money', type: 'checkbox' },
+          { id: 'proc4_q6', text: 'I analyse markets and suppliers', type: 'checkbox' }
+        ],
+        'Data Technician Level 3': [
+          { id: 'dt3_q1', text: 'I currently use Excel (basic or advanced functions)', type: 'checkbox' },
+          { id: 'dt3_q2', text: 'I have used databases (e.g. Access, SQL)', type: 'checkbox' },
+          { id: 'dt3_q3', text: 'I regularly access and use data sources in my role', type: 'checkbox' },
+          { id: 'dt3_q4', text: 'I understand the variety and complexity of the data I work with', type: 'checkbox' },
+          { id: 'dt3_q5', text: 'I am comfortable identifying patterns or trends in data', type: 'checkbox' },
+          { id: 'dt3_q6', text: 'I have used Power BI or another data visualisation tool', type: 'checkbox' }
+        ],
+        'Data Analyst Level 4': [
+          { id: 'da4_q1', text: 'I have used Power BI, Python, SQL, or advanced Excel', type: 'checkbox' },
+          { id: 'da4_q2', text: 'I can give an example of how I\'ve used Excel for analysis', type: 'checkbox' },
+          { id: 'da4_q3', text: 'I understand programming or statistical techniques', type: 'checkbox' },
+          { id: 'da4_q4', text: 'I work with data that is complex or comes from multiple sources', type: 'checkbox' },
+          { id: 'da4_q5', text: 'I work with large volumes of data (many records/columns/tables)', type: 'checkbox' },
+          { id: 'da4_q6', text: 'I am confident in learning more advanced tools (e.g. data modelling)', type: 'checkbox' }
+        ],
+        'Data Engineer Level 5': [
+          { id: 'de5_q1', text: 'I have experience with cloud services for data storage/processing', type: 'checkbox' },
+          { id: 'de5_q2', text: 'I can explain how I ensure data consistency in ETL processes', type: 'checkbox' },
+          { id: 'de5_q3', text: 'I\'ve optimised a complex SQL query', type: 'checkbox' },
+          { id: 'de5_q4', text: 'I work with data pipelines or data warehousing', type: 'checkbox' },
+          { id: 'de5_q5', text: 'I have experience with programming languages (Python, Java, etc.)', type: 'checkbox' },
+          { id: 'de5_q6', text: 'I understand data governance and security principles', type: 'checkbox' }
+        ],
+        'Team Leader': [
+          { id: 'tl_q1', text: 'I lead or manage a team', type: 'checkbox' },
+          { id: 'tl_q2', text: 'I manage resources to meet deadlines and budgets', type: 'checkbox' },
+          { id: 'tl_q3', text: 'I set and monitor team objectives and performance', type: 'checkbox' },
+          { id: 'tl_q4', text: 'I support the training and development of team members', type: 'checkbox' },
+          { id: 'tl_q5', text: 'I communicate clearly to improve team and business performance', type: 'checkbox' },
+          { id: 'tl_q6', text: 'I resolve conflicts and motivate team members', type: 'checkbox' }
+        ],
+        'Project Manager': [
+          { id: 'pm_q1', text: 'I support project teams across the project lifecycle', type: 'checkbox' },
+          { id: 'pm_q2', text: 'I review business cases and provide feedback', type: 'checkbox' },
+          { id: 'pm_q3', text: 'I assist with stakeholder engagement and communication', type: 'checkbox' },
+          { id: 'pm_q4', text: 'I help write and update project scope documents', type: 'checkbox' },
+          { id: 'pm_q5', text: 'I identify and manage risks/opportunities', type: 'checkbox' },
+          { id: 'pm_q6', text: 'I monitor and report on budgets and spending', type: 'checkbox' }
+        ],
+        'Improvement Practitioner': [
+          { id: 'ip_q1', text: 'I identify opportunities for process improvement', type: 'checkbox' },
+          { id: 'ip_q2', text: 'I use improvement methodologies (e.g. Lean, Six Sigma)', type: 'checkbox' },
+          { id: 'ip_q3', text: 'I analyse data to find inefficiencies', type: 'checkbox' },
+          { id: 'ip_q4', text: 'I facilitate workshops or improvement sessions', type: 'checkbox' },
+          { id: 'ip_q5', text: 'I measure the impact of improvement initiatives', type: 'checkbox' },
+          { id: 'ip_q6', text: 'I engage stakeholders in continuous improvement', type: 'checkbox' }
+        ],
+        'Business Analyst': [
+          { id: 'bsa_q1', text: 'I use tools like Excel, Visio, JIRA, or project frameworks (e.g. Agile)', type: 'checkbox' },
+          { id: 'bsa_q2', text: 'I gather stakeholder requirements and clarify expectations', type: 'checkbox' },
+          { id: 'bsa_q3', text: 'I apply structured investigation techniques to identify issues', type: 'checkbox' },
+          { id: 'bsa_q4', text: 'I help develop recommendations for change', type: 'checkbox' },
+          { id: 'bsa_q5', text: 'I can model business processes using diagrams or tools', type: 'checkbox' },
+          { id: 'bsa_q6', text: 'I gather requirements through interviews or workshops', type: 'checkbox' }
+        ],
+        'CIPS Level 5': [
+          { id: 'cips5_q1', text: 'I have advanced procurement experience', type: 'checkbox' },
+          { id: 'cips5_q2', text: 'I develop procurement strategies', type: 'checkbox' },
+          { id: 'cips5_q3', text: 'I manage complex supplier relationships', type: 'checkbox' },
+          { id: 'cips5_q4', text: 'I lead procurement projects', type: 'checkbox' },
+          { id: 'cips5_q5', text: 'I understand contract law and commercial agreements', type: 'checkbox' },
+          { id: 'cips5_q6', text: 'I provide strategic procurement advice', type: 'checkbox' }
+        ]
+      };
+
       // Map SVG node IDs to course names
       var SVG_COURSE_NODE_MAP = {
         'accountancy-level-2': 'Accountancy Level 2',
@@ -1227,6 +1484,93 @@
       // Keep track of selected course
       var selectedCourse = null;
 
+      // ===== Skills Assessment Modal Functions =====
+
+      // Show skills assessment modal for a course
+      function showSkillsAssessment(courseName) {
+        var modalOverlay = document.getElementById('skills-modal-overlay');
+        var modalTitle = document.getElementById('skills-modal-title');
+        var modalAssessmentTitle = document.getElementById('skills-modal-assessment-title');
+        var modalChecklist = document.getElementById('skills-modal-checklist');
+
+        if (!modalOverlay || !modalTitle || !modalAssessmentTitle || !modalChecklist) return;
+
+        // Set the course title
+        modalTitle.textContent = courseName;
+
+        // Set the assessment title
+        modalAssessmentTitle.textContent = 'Skills Assessment: ' + courseName;
+
+        // Clear previous checklist
+        modalChecklist.innerHTML = '';
+
+        // Get questions for this course
+        var questions = BRIDGE_QUESTIONS[courseName];
+        if (!questions || questions.length === 0) {
+          modalChecklist.innerHTML = '<p style="color: #666;">No skills assessment available for this course.</p>';
+        } else {
+          // Add subtitle
+          var subtitle = document.createElement('p');
+          subtitle.style.marginBottom = '16px';
+          subtitle.style.color = '#666';
+          subtitle.textContent = 'Please select all statements that apply to you:';
+          modalChecklist.appendChild(subtitle);
+
+          // Create checkbox items
+          questions.forEach(function(question) {
+            var itemDiv = document.createElement('div');
+            itemDiv.className = 'skills-checkbox-item';
+
+            var checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = question.id;
+            checkbox.name = question.id;
+
+            var label = document.createElement('label');
+            label.htmlFor = question.id;
+            label.textContent = question.text;
+
+            itemDiv.appendChild(checkbox);
+            itemDiv.appendChild(label);
+            modalChecklist.appendChild(itemDiv);
+          });
+        }
+
+        // Show the modal
+        modalOverlay.classList.add('modal-visible');
+      }
+
+      // Close skills assessment modal
+      function closeSkillsAssessment() {
+        var modalOverlay = document.getElementById('skills-modal-overlay');
+        if (modalOverlay) {
+          modalOverlay.classList.remove('modal-visible');
+        }
+      }
+
+      // Initialize modal close button
+      var modalCloseButton = document.getElementById('skills-modal-close');
+      if (modalCloseButton) {
+        modalCloseButton.addEventListener('click', closeSkillsAssessment);
+      }
+
+      // Close modal when clicking outside
+      var modalOverlay = document.getElementById('skills-modal-overlay');
+      if (modalOverlay) {
+        modalOverlay.addEventListener('click', function(e) {
+          if (e.target === modalOverlay) {
+            closeSkillsAssessment();
+          }
+        });
+      }
+
+      // Close modal on Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeSkillsAssessment();
+        }
+      });
+
       // Get linked courses for a given course
       function getLinkedCourses(courseName) {
         var linked = [courseName];
@@ -1254,6 +1598,14 @@
           return;
         }
 
+        // If a course is already selected (view is filtered), and user clicks on a different course,
+        // show the skills assessment modal for that course instead of filtering
+        if (selectedCourse !== null && selectedCourse !== courseName) {
+          showSkillsAssessment(courseName);
+          return;
+        }
+
+        // First click: filter the view to show progression pathways
         selectedCourse = courseName;
         var linkedCourses = getLinkedCourses(courseName);
         var visibleCoursesSet = {};
