@@ -7,86 +7,129 @@
   <style>
     html, body { height: 100%; margin: 0; background: #fff; }
     body { display: flex; align-items: center; justify-content: center; }
-    svg { max-width: 90vw; max-height: 90vh; width: 100%; height: auto; display: block; }
+    svg { max-width: 90vw; max-height: 90vh; width: 100%; height: auto; display: block; transition: filter 0.5s ease; }
 
-    /* Landing Page Overlay Styles */
+    /* ===== Landing Screen Styles ===== */
+
+    /* Apply blur to SVG when landing is active */
+    body.landing-active svg {
+      filter: blur(4px);
+    }
+
+    /* Landing overlay - full screen */
     #landing-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, rgba(32, 52, 86, 0.95) 0%, rgba(76, 106, 165, 0.9) 100%);
+      background: linear-gradient(135deg, rgba(32, 52, 86, 0.95) 0%, rgba(76, 106, 165, 0.92) 50%, rgba(77, 159, 168, 0.95) 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 9999;
-      transition: opacity 0.6s ease-out;
+      z-index: 1000;
+      opacity: 1;
+      transition: opacity 0.6s ease;
     }
 
+    /* Fade out animation */
     #landing-overlay.landing-hidden {
       opacity: 0;
       pointer-events: none;
     }
 
+    /* Central card container */
     #landing-card {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 50px 60px;
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-      text-align: center;
+      background: rgba(32, 52, 86, 0.85);
+      border: 2px solid rgba(109, 164, 217, 0.4);
+      border-radius: 16px;
+      padding: 48px 64px;
       max-width: 600px;
-      width: 90%;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                  0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+                  0 0 40px rgba(109, 164, 217, 0.3);
+      backdrop-filter: blur(10px);
     }
 
+    /* Title styling */
     #landing-card h1 {
-      color: #203456;
-      font-size: 36px;
-      font-weight: bold;
-      margin: 0 0 20px 0;
-      line-height: 1.2;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0 0 24px 0;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      letter-spacing: -0.5px;
     }
 
+    /* Instruction text styling */
     #landing-card p {
-      color: #4c6aa5;
-      font-size: 18px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1.125rem;
+      color: #e8f1f8;
+      margin: 0 0 32px 0;
       line-height: 1.6;
-      margin: 0 0 30px 0;
     }
 
+    /* Begin button styling */
     #begin-wizard {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #ffffff;
       background: linear-gradient(135deg, #4c6aa5 0%, #4d9fa8 100%);
-      color: white;
       border: none;
-      padding: 15px 40px;
-      font-size: 18px;
-      font-weight: bold;
       border-radius: 8px;
+      padding: 14px 48px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(76, 106, 165, 0.4);
+      box-shadow: 0 4px 16px rgba(76, 106, 165, 0.4);
       transition: all 0.3s ease;
+      outline: none;
     }
 
-    #begin-wizard:hover,
+    #begin-wizard:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(76, 106, 165, 0.6);
+      background: linear-gradient(135deg, #5a7ab5 0%, #5dafb8 100%);
+    }
+
     #begin-wizard:focus {
-      transform: scale(1.05);
-      box-shadow: 0 6px 16px rgba(76, 106, 165, 0.6);
-      background: linear-gradient(135deg, #6da4d9 0%, #4d9fa8 100%);
+      box-shadow: 0 0 0 3px rgba(109, 164, 217, 0.5), 0 6px 24px rgba(76, 106, 165, 0.6);
     }
 
-    #begin-wizard:focus {
-      outline: 2px solid #86679b;
-      outline-offset: 3px;
+    #begin-wizard:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(76, 106, 165, 0.4);
     }
 
-    /* Blur effect applied to SVG when landing page is active */
-    body.landing-active svg {
-      filter: blur(4px);
-      transition: filter 0.3s ease;
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      #landing-card {
+        padding: 32px 24px;
+        max-width: 90%;
+      }
+
+      #landing-card h1 {
+        font-size: 2rem;
+      }
+
+      #landing-card p {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
-<body>
+<body class="landing-active">
+  <!-- Landing Screen Overlay -->
+  <div id="landing-overlay" role="dialog" aria-modal="true" aria-labelledby="landing-title">
+    <div id="landing-card">
+      <h1 id="landing-title">Interactive Skills Wizard</h1>
+      <p>Click your current course of study to see your potential pathways</p>
+      <button id="begin-wizard" aria-label="Begin interactive wizard">Begin</button>
+    </div>
+  </div>
+
 <!--?xml version="1.0" encoding="utf-8"?-->
 <svg id="Layer_1" version="1.1" viewBox="0 0 841.89 595.28" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <!-- Generator: Adobe Illustrator 29.8.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 2)  -->
@@ -443,110 +486,6 @@
   .connector-duplicate-pl4 { stroke-opacity: 0; pointer-events: none; }
 
   .connector-duplicate-pl3 { stroke-opacity: 0; pointer-events: none; }
-
-  /* Skills Assessment Modal Styles */
-  .skills-modal {
-    display: none;
-    position: fixed;
-    z-index: 10000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(32, 52, 86, 0.8);
-    align-items: center;
-    justify-content: center;
-  }
-
-  .skills-modal.show {
-    display: flex;
-  }
-
-  .skills-modal-content {
-    background-color: #f6f6f6;
-    padding: 30px;
-    border-radius: 8px;
-    max-width: 600px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    position: relative;
-  }
-
-  .skills-modal-header {
-    margin-bottom: 20px;
-  }
-
-  .skills-modal-title {
-    color: #203456;
-    font-size: 24px;
-    font-weight: bold;
-    margin: 0 0 15px 0;
-  }
-
-  .skills-modal-description {
-    color: #4c6aa5;
-    font-size: 16px;
-    line-height: 1.5;
-    margin-bottom: 20px;
-  }
-
-  .skills-modal-checklist-title {
-    color: #203456;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 20px 0 15px 0;
-  }
-
-  .skills-checklist {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .skills-checklist-item {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 12px;
-    padding: 10px;
-    background-color: white;
-    border-radius: 4px;
-    border: 1px solid #e0e0e0;
-  }
-
-  .skills-checklist-item input[type="checkbox"] {
-    margin-right: 12px;
-    margin-top: 3px;
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    flex-shrink: 0;
-  }
-
-  .skills-checklist-item label {
-    color: #203456;
-    font-size: 15px;
-    line-height: 1.4;
-    cursor: pointer;
-    flex: 1;
-  }
-
-  .skills-modal-close {
-    background-color: #4c6aa5;
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    font-size: 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 20px;
-    float: right;
-  }
-
-  .skills-modal-close:hover {
-    background-color: #6da4d9;
-  }
 </style>
 <rect class="st23" height="595.28" width="841.89"></rect>
 <!-- Duplicate copies of connectors associated with Accountancy Level 2.
@@ -623,7 +562,28 @@
 <path class="st24" d="M373.71,47.58l1.58-3.39c1.45.94,3.67,1.58,5.66,1.58,2.18,0,3-.58,3-1.48,0-2.67-9.84.06-9.84-6.45,0-3.09,2.79-5.27,7.54-5.27,2.24,0,4.73.51,6.27,1.42l-1.58,3.36c-1.61-.91-3.21-1.21-4.7-1.21-2.12,0-3.03.67-3.03,1.51,0,2.79,9.84.09,9.84,6.51,0,3.03-2.82,5.18-7.69,5.18-2.76,0-5.54-.76-7.06-1.76Z"></path>
 </g>
 </g>
-<g data-course="Accountancy Level 2" style="">
+<g class="course-group" id="course-developing-3cs" data-course="Developing the 3 C&#39;s" style="">
+<g>
+<path class="st24" d="M27.86,27.9h9.63c6.94,0,11.69,4.18,11.69,10.6s-4.75,10.6-11.69,10.6h-9.63v-21.2ZM37.25,45.07c4.21,0,6.97-2.51,6.97-6.57s-2.76-6.57-6.97-6.57h-4.48v13.15h4.48Z"></path>
+<path class="st24" d="M69.3,45.16v3.94h-16.42v-21.2h16.02v3.94h-11.15v4.6h9.84v3.82h-9.84v4.91h11.54Z"></path>
+<path class="st24" d="M93.29,27.9l-9.18,21.2h-4.85l-9.15-21.2h5.3l6.45,15.14,6.54-15.14h4.88Z"></path>
+<path class="st24" d="M111.47,45.16v3.94h-16.42v-21.2h16.02v3.94h-11.15v4.6h9.84v3.82h-9.84v4.91h11.54Z"></path>
+<path class="st24" d="M115.38,27.9h4.91v17.2h10.63v4h-15.54v-21.2Z"></path>
+<path class="st24" d="M131.99,38.5c0-6.3,4.91-10.96,11.6-10.96s11.6,4.63,11.6,10.96-4.94,10.96-11.6,10.96-11.6-4.66-11.6-10.96ZM150.22,38.5c0-4.03-2.85-6.78-6.63-6.78s-6.63,2.76-6.63,6.78,2.85,6.78,6.63,6.78,6.63-2.76,6.63-6.78Z"></path>
+<path class="st24" d="M177.27,35.59c0,4.73-3.54,7.66-9.21,7.66h-4.27v5.85h-4.91v-21.2h9.18c5.66,0,9.21,2.94,9.21,7.69ZM172.31,35.59c0-2.33-1.51-3.7-4.51-3.7h-4v7.36h4c3,0,4.51-1.36,4.51-3.67Z"></path>
+<path class="st24" d="M180.76,27.9h4.91v21.2h-4.91v-21.2Z"></path>
+<path class="st24" d="M210.14,27.9v21.2h-4.03l-10.57-12.87v12.87h-4.85v-21.2h4.06l10.54,12.87v-12.87h4.85Z"></path>
+<path class="st24" d="M229.5,38.16h4.48v8.6c-2.33,1.76-5.54,2.7-8.57,2.7-6.66,0-11.57-4.57-11.57-10.96s4.91-10.96,11.66-10.96c3.73,0,6.81,1.27,8.87,3.67l-3.15,2.91c-1.54-1.64-3.33-2.39-5.48-2.39-4.12,0-6.94,2.76-6.94,6.78s2.82,6.78,6.88,6.78c1.33,0,2.57-.24,3.82-.91v-6.21Z"></path>
+<path class="st24" d="M251.5,31.89h-6.79v-4h18.48v4h-6.79v17.2h-4.91v-17.2Z"></path>
+<path class="st24" d="M285.28,27.9v21.2h-4.91v-8.69h-9.63v8.69h-4.91v-21.2h4.91v8.36h9.63v-8.36h4.91Z"></path>
+<path class="st24" d="M306.73,45.16v3.94h-16.42v-21.2h16.02v3.94h-11.15v4.6h9.84v3.82h-9.84v4.91h11.54Z"></path>
+<path class="st24" d="M333.54,42.62c0,3.57-2.76,6.85-8.78,6.85-2.97,0-6.03-.82-8.09-2.27l1.91-3.76c1.61,1.21,3.85,1.91,6.06,1.91,2.45,0,3.97-1,3.97-2.73,0-1.6-1.18-2.6-3.97-2.6h-2.24v-3.24l4.36-4.94h-9.03v-3.94h14.84v3.18l-4.79,5.45c3.82.61,5.75,2.97,5.75,6.09Z"></path>
+<path class="st24" d="M344.39,38.5c0-6.39,4.91-10.96,11.51-10.96,3.66,0,6.72,1.33,8.72,3.76l-3.15,2.91c-1.42-1.64-3.21-2.48-5.33-2.48-3.97,0-6.79,2.79-6.79,6.78s2.82,6.78,6.79,6.78c2.12,0,3.91-.85,5.33-2.51l3.15,2.91c-2,2.45-5.06,3.79-8.75,3.79-6.57,0-11.48-4.57-11.48-10.96Z"></path>
+<path class="st24" d="M372.62,29.29c0,.79-.12,1.36-.79,3.03l-1.76,4.36h-3l1.3-4.79c-.97-.42-1.6-1.33-1.6-2.6,0-1.76,1.27-2.91,2.94-2.91s2.91,1.18,2.91,2.91Z"></path>
+<path class="st24" d="M373.71,47.58l1.58-3.39c1.45.94,3.67,1.58,5.66,1.58,2.18,0,3-.58,3-1.48,0-2.67-9.84.06-9.84-6.45,0-3.09,2.79-5.27,7.54-5.27,2.24,0,4.73.51,6.27,1.42l-1.58,3.36c-1.61-.91-3.21-1.21-4.7-1.21-2.12,0-3.03.67-3.03,1.51,0,2.79,9.84.09,9.84,6.51,0,3.03-2.82,5.18-7.69,5.18-2.76,0-5.54-.76-7.06-1.76Z"></path>
+</g>
+</g>
+<g data-course="Team Leader" style="">
 <path class="st24" d="M339.85,202.45h-4.02v-2.37h10.95v2.37h-4.02v10.19h-2.91v-10.19Z"></path>
 <path class="st24" d="M358.07,210.31v2.33h-9.73v-12.56h9.49v2.33h-6.6v2.73h5.83v2.26h-5.83v2.91h6.84Z"></path>
 <path class="st24" d="M368.66,209.95h-5.83l-1.11,2.69h-2.98l5.6-12.56h2.87l5.62,12.56h-3.05l-1.11-2.69ZM367.74,207.74l-1.99-4.81-1.99,4.81h3.98Z"></path>
@@ -836,7 +796,7 @@
 <path class="st30 pulse-target connector-original-l2" d="M618.93,109.04v-26.09c1.72-1.72,4.54-1.72,6.27,0l9.91,9.91c1.72,1.72,1.72,4.54,0,6.27l-9.91,9.91c-1.72,1.72-4.54,1.72-6.27,0Z" style=""></path>
 <!-- Add pulse-target class so this arrow also pulses when Accountancy Level 2 is hovered -->
 <path class="st28 pulse-target connector-original-l2" d="M193.84,190.92h26.09c1.72,1.72,1.72,4.54,0,6.27l-9.91,9.91c-1.72,1.72-4.54,1.72-6.27,0l-9.91-9.91c-1.72-1.72-1.72-4.54,0-6.27Z" style=""></path>
-<path class="st30" data-course="accountancy-level-2" d="M819.81,164.85h-26.09c-1.72-1.72-1.72-4.54,0-6.27l9.91-9.91c1.72-1.72,4.54-1.72,6.27,0l9.91,9.91c1.72,1.72,1.72,4.54,0,6.27Z" style=""></path>
+<path class="st30" d="M819.81,164.85h-26.09c-1.72-1.72-1.72-4.54,0-6.27l9.91-9.91c1.72-1.72,4.54-1.72,6.27,0l9.91,9.91c1.72,1.72,1.72,4.54,0,6.27Z" style="display:none"></path>
 <line class="st3 pulse-target connector-original-ba" x1="188.71" x2="583.1" y1="532.56" y2="532.56" style=""></line>
 <path class="st25 pulse-target connector-original-ba" d="M552.55,546.13v-26.09c1.72-1.72,4.54-1.72,6.27,0l9.91,9.91c1.72,1.72,1.72,4.54,0,6.27l-9.91,9.91c-1.72,1.72-4.54,1.72-6.27,0Z" style=""></path>
 <path class="st4 pulse-target connector-original-ba" d="M268.63,408.76h-41.1c-11.74,0-21.35,9.61-21.35,21.35v32.63s0,13.44,0,13.44c0,11.74-9.61,21.35-21.35,21.35" style=""></path>
@@ -1111,6 +1071,46 @@
 <!-- Script to add or remove the pulsing highlight on connectors when hovering the Accountancy Level 2 box. -->
 <script type="text/ecmascript">
     (function() {
+      // ===== Landing Screen Logic =====
+
+      // Initialize landing screen on DOM load
+      var landingOverlay = document.getElementById('landing-overlay');
+      var beginButton = document.getElementById('begin-wizard');
+
+      // Function to dismiss the landing screen
+      function dismissLanding() {
+        // Remove landing-active class from body to remove blur
+        document.body.classList.remove('landing-active');
+
+        // Add landing-hidden class to overlay for fade-out animation
+        landingOverlay.classList.add('landing-hidden');
+
+        // After transition ends, hide completely and remove from accessibility tree
+        setTimeout(function() {
+          landingOverlay.style.display = 'none';
+          // Move focus to the document body
+          document.body.focus();
+        }, 600); // Match the CSS transition duration
+      }
+
+      // Handle Begin button click
+      if (beginButton) {
+        beginButton.addEventListener('click', dismissLanding);
+
+        // Handle keyboard events (Enter and Space)
+        beginButton.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            dismissLanding();
+          }
+        });
+
+        // Set initial focus to the Begin button
+        setTimeout(function() {
+          beginButton.focus();
+        }, 100);
+      }
+
       // ===== Course Progression and Click Filtering Logic =====
 
       // Course progression pathways (same logic as Test Three C's Standalone)
@@ -1161,6 +1161,17 @@
         'data-engineer-level-5': 'Data Engineer Level 5'
       };
 
+      // Normalize data-course attribute values to match course names in PROGRESSION_PATHWAYS
+      // This ensures elements with lowercase-hyphenated data-course attributes match properly
+      function normalizeCourseAttribute(dataCourseValue) {
+        // If it's already in the SVG_COURSE_NODE_MAP, convert it
+        if (SVG_COURSE_NODE_MAP[dataCourseValue]) {
+          return SVG_COURSE_NODE_MAP[dataCourseValue];
+        }
+        // Otherwise return as-is (handles Title Case format)
+        return dataCourseValue;
+      }
+
       // Map course names to connector classes
       var COURSE_CONNECTOR_CLASSES = {
         'Accountancy Level 2': ['connector-original-l2', 'connector-duplicate-l2'],
@@ -1173,15 +1184,43 @@
         'Data Engineer Level 5': ['connector-original-de5', 'connector-duplicate-de5']
       };
 
-      // Skills assessment checklist for each course
-      var SKILLS_ASSESSMENT = {
+      // ===== Course-Specific Element Hiding Rules =====
+      // Map course names to specific elements that should be hidden when that course is clicked
+      // Each entry contains an array of CSS selectors for elements to hide
+      var COURSE_SPECIFIC_ELEMENTS_TO_HIDE = {
+        // When Business Admin Level 3 is clicked, hide these specific connector elements
+        'Business Admin Level 3': [
+          'path.st25.pulse-target.connector-original-pl3[d^="M679.96,470.14"]',
+          'path.st30.pulse-target.connector-original-pl3[d^="M798.94,191.98"]'
+        ],
+
+        // Add rules for other courses here as needed
+        'Accountancy Level 2': [
+          // Example: 'line.example-class[x1="123"]'
+        ],
+
         'Accountancy Level 3/4': [
-          'I help with monthly/year-end reports',
-          'I compile financial/accounting records',
-          'I work on tax returns, audit docs, or reconciliations',
-          'I provide financial information to others internally',
-          'I find ways to improve efficiency or add value',
-          'I analyse data for trends/insights to support decisions'
+          // Add specific elements to hide for this course
+        ],
+
+        'Procurement Level 3': [
+          // Add specific elements to hide for this course
+        ],
+
+        'Procurement Level 4': [
+          // Add specific elements to hide for this course
+        ],
+
+        'Data Technician Level 3': [
+          // Add specific elements to hide for this course
+        ],
+
+        'Data Analyst Level 4': [
+          // Add specific elements to hide for this course
+        ],
+
+        'Data Engineer Level 5': [
+          // Add specific elements to hide for this course
         ]
       };
 
@@ -1215,12 +1254,6 @@
           return;
         }
 
-        // If a course is already selected and the clicked course has skills assessment, show modal
-        if (selectedCourse !== null &amp;&amp; SKILLS_ASSESSMENT[courseName]) {
-          showSkillsAssessmentModal(courseName);
-          return;
-        }
-
         selectedCourse = courseName;
         var linkedCourses = getLinkedCourses(courseName);
         var visibleCoursesSet = {};
@@ -1232,6 +1265,7 @@
 
         updateCourseVisibility(visibleCoursesSet);
         updateConnectorVisibility(visibleCoursesSet);
+        applyCourseSpecificHiding(courseName);
         showCourseInfo(courseName);
       }
 
@@ -1255,7 +1289,16 @@
             }
           }
         }
+
+        // Reset course-specific hidden elements
+        resetCourseSpecificHiding();
       }
+
+      // Course labels that should always remain visible (non-clickable labels)
+      var ALWAYS_VISIBLE_COURSE_LABELS = [
+        'Developing the 3 C\'s',
+        'Team Leader'
+      ];
 
       // Update course visibility based on visible courses set
       function updateCourseVisibility(visibleCoursesSet) {
@@ -1263,7 +1306,12 @@
         for (var i = 0; i &lt; allCourseElements.length; i++) {
           var el = allCourseElements[i];
           var course = el.getAttribute('data-course');
-          if (visibleCoursesSet[course]) {
+          var normalizedCourse = normalizeCourseAttribute(course);
+
+          // Always show non-clickable course labels
+          if (ALWAYS_VISIBLE_COURSE_LABELS.indexOf(course) !== -1) {
+            el.style.display = '';
+          } else if (visibleCoursesSet[normalizedCourse]) {
             el.style.display = '';
           } else {
             el.style.display = 'none';
@@ -1313,89 +1361,45 @@
         }
       }
 
+      // Apply course-specific element hiding rules
+      function applyCourseSpecificHiding(courseName) {
+        var selectors = COURSE_SPECIFIC_ELEMENTS_TO_HIDE[courseName];
+        if (selectors &amp;&amp; selectors.length &gt; 0) {
+          for (var i = 0; i &lt; selectors.length; i++) {
+            var selector = selectors[i];
+            // Skip empty selectors or comments
+            if (selector &amp;&amp; typeof selector === 'string' &amp;&amp; selector.indexOf('//') !== 0) {
+              var elements = document.querySelectorAll(selector);
+              for (var j = 0; j &lt; elements.length; j++) {
+                elements[j].style.display = 'none';
+              }
+            }
+          }
+        }
+      }
+
+      // Reset all course-specific hidden elements
+      function resetCourseSpecificHiding() {
+        for (var course in COURSE_SPECIFIC_ELEMENTS_TO_HIDE) {
+          var selectors = COURSE_SPECIFIC_ELEMENTS_TO_HIDE[course];
+          if (selectors &amp;&amp; selectors.length &gt; 0) {
+            for (var i = 0; i &lt; selectors.length; i++) {
+              var selector = selectors[i];
+              // Skip empty selectors or comments
+              if (selector &amp;&amp; typeof selector === 'string' &amp;&amp; selector.indexOf('//') !== 0) {
+                var elements = document.querySelectorAll(selector);
+                for (var j = 0; j &lt; elements.length; j++) {
+                  elements[j].style.display = '';
+                }
+              }
+            }
+          }
+        }
+      }
+
       // Simple placeholder for course information
       function showCourseInfo(courseName) {
         console.log('Course selected:', courseName);
-      }
-
-      // ===== Skills Assessment Modal Functions =====
-
-      // Show the skills assessment modal
-      function showSkillsAssessmentModal(courseName) {
-        var skills = SKILLS_ASSESSMENT[courseName];
-        if (!skills || skills.length === 0) {
-          console.log('No skills assessment available for:', courseName);
-          return;
-        }
-
-        var modal = document.getElementById('skillsModal');
-        var modalTitle = document.getElementById('modalCourseTitle');
-        var checklistTitle = document.getElementById('modalChecklistTitle');
-        var checklistContainer = document.getElementById('skillsChecklistContainer');
-
-        if (!modal || !modalTitle || !checklistTitle || !checklistContainer) {
-          console.error('Modal elements not found');
-          return;
-        }
-
-        // Set the course title
-        modalTitle.textContent = courseName;
-
-        // Set the checklist title
-        checklistTitle.textContent = 'Skills Assessment: ' + courseName;
-
-        // Clear existing checklist items
-        checklistContainer.innerHTML = '';
-
-        // Create checklist items
-        for (var i = 0; i &lt; skills.length; i++) {
-          var li = document.createElement('li');
-          li.className = 'skills-checklist-item';
-
-          var checkbox = document.createElement('input');
-          checkbox.type = 'checkbox';
-          checkbox.id = 'skill-' + i;
-
-          var label = document.createElement('label');
-          label.setAttribute('for', 'skill-' + i);
-          label.textContent = skills[i];
-
-          li.appendChild(checkbox);
-          li.appendChild(label);
-          checklistContainer.appendChild(li);
-        }
-
-        // Show the modal
-        modal.classList.add('show');
-      }
-
-      // Hide the skills assessment modal
-      function hideSkillsAssessmentModal() {
-        var modal = document.getElementById('skillsModal');
-        if (modal) {
-          modal.classList.remove('show');
-        }
-      }
-
-      // Initialize modal close button and background click
-      function initSkillsModal() {
-        var modal = document.getElementById('skillsModal');
-        var closeBtn = document.getElementById('closeModalBtn');
-
-        if (closeBtn) {
-          closeBtn.addEventListener('click', function() {
-            hideSkillsAssessmentModal();
-          });
-        }
-
-        // Close modal when clicking outside the content
-        if (modal) {
-          modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-              hideSkillsAssessmentModal();
-            }
-          });
-        }
       }
 
       // Initialize course click filtering
@@ -1422,315 +1426,3 @@
         // Optional: clicking on empty space resets the view
         svgRoot.addEventListener('click', function() {
           resetCourseFilter();
-        });
-      }
-
-      // ===== Existing Pulse Behaviour for Hover =====
-
-      // Pulse behaviour for Accountancy Level&nbsp;2 connectors
-      function addPulseL2() {
-        var originals = document.querySelectorAll('.connector-original-l2');
-        var duplicates = document.querySelectorAll('.connector-duplicate-l2');
-        for (var i = 0; i &lt; originals.length; i++) {
-          originals[i].classList.add('pulse-hidden');
-        }
-        for (var j = 0; j &lt; duplicates.length; j++) {
-          duplicates[j].classList.add('pulse-glow');
-        }
-
-        // Do not apply the dashed container glow when hovering Accountancy Level&nbsp;2.
-        // Leaving this block empty ensures that only the connectors pulse.
-      }
-      function removePulseL2() {
-        var originals = document.querySelectorAll('.connector-original-l2');
-        var duplicates = document.querySelectorAll('.connector-duplicate-l2');
-        for (var i = 0; i &lt; originals.length; i++) {
-          originals[i].classList.remove('pulse-hidden');
-        }
-        for (var j = 0; j &lt; duplicates.length; j++) {
-          duplicates[j].classList.remove('pulse-glow');
-        }
-
-        // No dashed container glow to remove for Accountancy Level&nbsp;2; keep this block empty.
-      }
-      var hoverBoxL2 = document.getElementById('accountancy-level-2');
-      if (hoverBoxL2) {
-        hoverBoxL2.addEventListener('mouseenter', addPulseL2);
-        hoverBoxL2.addEventListener('mouseleave', removePulseL2);
-      }
-
-      // Pulse behaviour for Accountancy Level&nbsp;3 and&nbsp;4 connectors
-      function addPulseL34() {
-        var originals = document.querySelectorAll('.connector-original-l3-4');
-        var duplicates = document.querySelectorAll('.connector-duplicate-l3-4');
-        for (var i = 0; i &lt; originals.length; i++) {
-          originals[i].classList.add('pulse-hidden');
-        }
-        for (var j = 0; j &lt; duplicates.length; j++) {
-          duplicates[j].classList.add('pulse-glow');
-        }
-
-        // Also apply the glow to the dashed container when hovering Accountancy Level&nbsp;3 and&nbsp;4
-        var dashBox = document.getElementById('dash-container');
-        if (dashBox) {
-          dashBox.classList.add('glow-dash-container');
-        }
-      }
-      function removePulseL34() {
-        var originals = document.querySelectorAll('.connector-original-l3-4');
-        var duplicates = document.querySelectorAll('.connector-duplicate-l3-4');
-        for (var i = 0; i &lt; originals.length; i++) {
-          originals[i].classList.remove('pulse-hidden');
-        }
-        for (var j = 0; j &lt; duplicates.length; j++) {
-          duplicates[j].classList.remove('pulse-glow');
-        }
-
-        // Remove the glow from the dashed container when no longer hovering Accountancy Level&nbsp;3 and&nbsp;4
-        var dashBox = document.getElementById('dash-container');
-        if (dashBox) {
-          dashBox.classList.remove('glow-dash-container');
-        }
-      }
-      var hoverBoxL34 = document.getElementById('accountancy-level-3-4');
-      if (hoverBoxL34) {
-        hoverBoxL34.addEventListener('mouseenter', addPulseL34);
-        hoverBoxL34.addEventListener('mouseleave', removePulseL34);
-      }
-
-      // Pulse behaviour for Business Admin Level&nbsp;3 connectors
-      function addPulseBA() {
-        var originals = document.querySelectorAll('.connector-original-ba');
-        var duplicates = document.querySelectorAll('.connector-duplicate-ba');
-        for (var i = 0; i &lt; originals.length; i++) {
-          originals[i].classList.add('pulse-hidden');
-        }
-        for (var j = 0; j &lt; duplicates.length; j++) {
-          duplicates[j].classList.add('pulse-glow');
-        }
-        // Also apply the glow to the dashed container when hovering Business Admin Level&nbsp;3
-        var dashBoxBA = document.getElementById('dash-container');
-        if (dashBoxBA) {
-          dashBoxBA.classList.add('glow-dash-container');
-        }
-      }
-      function removePulseBA() {
-        var originals = document.querySelectorAll('.connector-original-ba');
-        var duplicates = document.querySelectorAll('.connector-duplicate-ba');
-        for (var i = 0; i &lt; originals.length; i++) {
-          originals[i].classList.remove('pulse-hidden');
-        }
-        for (var j = 0; j &lt; duplicates.length; j++) {
-          duplicates[j].classList.remove('pulse-glow');
-        }
-        // Remove the glow from the dashed container when no longer hovering Business Admin Level&nbsp;3
-        var dashBoxBA = document.getElementById('dash-container');
-        if (dashBoxBA) {
-          dashBoxBA.classList.remove('glow-dash-container');
-        }
-      }
-      var hoverBoxBA = document.getElementById('business-admin-level-3');
-      if (hoverBoxBA) {
-        hoverBoxBA.addEventListener('mouseenter', addPulseBA);
-        hoverBoxBA.addEventListener('mouseleave', removePulseBA);
-      }
-    
-      // Pulse behaviour for Data Technician Level 3 connectors
-      function addPulseDT3() {
-        var originals = document.querySelectorAll('.connector-original-dt3');
-        var duplicates = document.querySelectorAll('.connector-duplicate-dt3');
-        for (var i=0;i&lt;originals.length;i++){ originals[i].classList.add('pulse-hidden'); }
-        for (var j=0;j&lt;duplicates.length;j++){ duplicates[j].classList.add('pulse-glow'); }
-        var dash = document.getElementById('dash-container');
-        if (dash) dash.classList.add('glow-dash-container');
-      }
-      function removePulseDT3() {
-        var originals = document.querySelectorAll('.connector-original-dt3');
-        var duplicates = document.querySelectorAll('.connector-duplicate-dt3');
-        for (var i=0;i&lt;originals.length;i++){ originals[i].classList.remove('pulse-hidden'); }
-        for (var j=0;j&lt;duplicates.length;j++){ duplicates[j].classList.remove('pulse-glow'); }
-        var dash = document.getElementById('dash-container');
-        if (dash) dash.classList.remove('glow-dash-container');
-      }
-      var hoverDT3 = document.getElementById('data-technician-level-3');
-      if (hoverDT3){ hoverDT3.addEventListener('mouseenter', addPulseDT3); hoverDT3.addEventListener('mouseleave', removePulseDT3); }
-
-      // Pulse behaviour for Data Engineer Level 5 connectors
-      function addPulseDE5() {
-        var originals = document.querySelectorAll('.connector-original-de5');
-        var duplicates = document.querySelectorAll('.connector-duplicate-de5');
-        for (var i=0;i&lt;originals.length;i++){ originals[i].classList.add('pulse-hidden'); }
-        for (var j=0;j&lt;duplicates.length;j++){ duplicates[j].classList.add('pulse-glow'); }
-        var dash = document.getElementById('dash-container');
-        if (dash) dash.classList.add('glow-dash-container');
-      }
-      function removePulseDE5() {
-        var originals = document.querySelectorAll('.connector-original-de5');
-        var duplicates = document.querySelectorAll('.connector-duplicate-de5');
-        for (var i=0;i&lt;originals.length;i++){ originals[i].classList.remove('pulse-hidden'); }
-        for (var j=0;j&lt;duplicates.length;j++){ duplicates[j].classList.remove('pulse-glow'); }
-        var dash = document.getElementById('dash-container');
-        if (dash) dash.classList.remove('glow-dash-container');
-      }
-      var hoverDE5 = document.getElementById('data-engineer-level-5');
-      if (hoverDE5){ hoverDE5.addEventListener('mouseenter', addPulseDE5); hoverDE5.addEventListener('mouseleave', removePulseDE5); }
-
-      // Pulse behaviour for Data Analyst Level 4 connectors
-      function addPulseDA4() {
-        var originals = document.querySelectorAll('.connector-original-da4');
-        var duplicates = document.querySelectorAll('.connector-duplicate-da4');
-        for (var i = 0; i &lt; originals.length; i++) { originals[i].classList.add('pulse-hidden'); }
-        for (var j = 0; j &lt; duplicates.length; j++) { duplicates[j].classList.add('pulse-glow'); }
-        var dashBox = document.getElementById('dash-container');
-        if (dashBox) { dashBox.classList.add('glow-dash-container'); }
-      }
-      function removePulseDA4() {
-        var originals = document.querySelectorAll('.connector-original-da4');
-        var duplicates = document.querySelectorAll('.connector-duplicate-da4');
-        for (var i = 0; i &lt; originals.length; i++) { originals[i].classList.remove('pulse-hidden'); }
-        for (var j = 0; j &lt; duplicates.length; j++) { duplicates[j].classList.remove('pulse-glow'); }
-        var dashBox = document.getElementById('dash-container');
-        if (dashBox) { dashBox.classList.remove('glow-dash-container'); }
-      }
-      var hoverDA4 = document.getElementById('data-analyst-level-4');
-      if (hoverDA4) {
-        hoverDA4.addEventListener('mouseenter', addPulseDA4);
-        hoverDA4.addEventListener('mouseleave', removePulseDA4);
-      }
-
-      // Pulse behaviour for Procurement Level 4 connectors
-      function addPulsePL4() {
-        var originals = document.querySelectorAll('.connector-original-pl4');
-        var duplicates = document.querySelectorAll('.connector-duplicate-pl4');
-        for (var i = 0; i &lt; originals.length; i++) { originals[i].classList.add('pulse-hidden'); }
-        for (var j = 0; j &lt; duplicates.length; j++) { duplicates[j].classList.add('pulse-glow'); }
-        var dashBox = document.getElementById('dash-container');
-        if (dashBox) { dashBox.classList.add('glow-dash-container'); }
-      }
-      function removePulsePL4() {
-        var originals = document.querySelectorAll('.connector-original-pl4');
-        var duplicates = document.querySelectorAll('.connector-duplicate-pl4');
-        for (var i = 0; i &lt; originals.length; i++) { originals[i].classList.remove('pulse-hidden'); }
-        for (var j = 0; j &lt; duplicates.length; j++) { duplicates[j].classList.remove('pulse-glow'); }
-        var dashBox = document.getElementById('dash-container');
-        if (dashBox) { dashBox.classList.remove('glow-dash-container'); }
-      }
-      var hoverPL4 = document.getElementById('procurement-level-4');
-      if (hoverPL4) {
-        hoverPL4.addEventListener('mouseenter', addPulsePL4);
-        hoverPL4.addEventListener('mouseleave', removePulsePL4);
-      }
-
-      // Pulse behaviour for Procurement Level 3 connectors
-      function addPulsePL3() {
-        var originals = document.querySelectorAll('.connector-original-pl3');
-        var duplicates = document.querySelectorAll('.connector-duplicate-pl3');
-        for (var i = 0; i &lt; originals.length; i++) { originals[i].classList.add('pulse-hidden'); }
-        for (var j = 0; j &lt; duplicates.length; j++) { duplicates[j].classList.add('pulse-glow'); }
-        var dash = document.getElementById('dash-container');
-        if (dash) { dash.classList.add('glow-dash-container'); }
-      }
-      function removePulsePL3() {
-        var originals = document.querySelectorAll('.connector-original-pl3');
-        var duplicates = document.querySelectorAll('.connector-duplicate-pl3');
-        for (var i = 0; i &lt; originals.length; i++) { originals[i].classList.remove('pulse-hidden'); }
-        for (var j = 0; j &lt; duplicates.length; j++) { duplicates[j].classList.remove('pulse-glow'); }
-        var dash = document.getElementById('dash-container');
-        if (dash) { dash.classList.remove('glow-dash-container'); }
-      }
-      var hoverPL3 = document.getElementById('procurement-level-3');
-      if (hoverPL3) {
-        hoverPL3.addEventListener('mouseenter', addPulsePL3);
-        hoverPL3.addEventListener('mouseleave', removePulsePL3);
-      }
-
-      // Initialize course click filtering and skills modal
-      initCourseClickFiltering();
-      initSkillsModal();
-})();
-  </script>
-</svg>
-
-<!-- Skills Assessment Modal -->
-<div id="skillsModal" class="skills-modal">
-  <div class="skills-modal-content">
-    <div class="skills-modal-header">
-      <h2 id="modalCourseTitle" class="skills-modal-title"></h2>
-      <p class="skills-modal-description">
-        To move onto this course you will need to be demonstrating or have the opportunity to demonstrate the following skills in your current role:
-      </p>
-    </div>
-    <h3 id="modalChecklistTitle" class="skills-modal-checklist-title"></h3>
-    <p style="color: #4c6aa5; font-size: 14px; margin-bottom: 15px;">Please select all statements that apply to you:</p>
-    <ul id="skillsChecklistContainer" class="skills-checklist">
-      <!-- Checklist items will be dynamically inserted here -->
-    </ul>
-    <button id="closeModalBtn" class="skills-modal-close">Close</button>
-  </div>
-</div>
-
-<!-- Landing Page Overlay -->
-<div id="landing-overlay" role="dialog" aria-modal="true" aria-labelledby="landing-title">
-  <div id="landing-card">
-    <h1 id="landing-title">Interactive Skills Wizard</h1>
-    <p>Click your current course of study to see your potential pathways</p>
-    <button id="begin-wizard" type="button">Begin</button>
-  </div>
-</div>
-
-<script>
-  // Landing page initialization and behavior
-  (function() {
-    'use strict';
-
-    // Wait for DOM to be fully loaded
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initLandingPage);
-    } else {
-      initLandingPage();
-    }
-
-    function initLandingPage() {
-      var overlay = document.getElementById('landing-overlay');
-      var beginButton = document.getElementById('begin-wizard');
-      var body = document.body;
-
-      // Apply landing-active state to body on page load
-      body.classList.add('landing-active');
-
-      // Set initial focus to the Begin button
-      if (beginButton) {
-        beginButton.focus();
-      }
-
-      // Handle Begin button click
-      if (beginButton) {
-        beginButton.addEventListener('click', dismissLanding);
-
-        // Handle keyboard events (Enter and Space)
-        beginButton.addEventListener('keydown', function(event) {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            dismissLanding();
-          }
-        });
-      }
-
-      // Function to dismiss the landing page
-      function dismissLanding() {
-        // Add the hidden class to trigger fade-out animation
-        overlay.classList.add('landing-hidden');
-
-        // Remove blur from SVG
-        body.classList.remove('landing-active');
-
-        // After transition ends, set display:none for performance and accessibility
-        setTimeout(function() {
-          overlay.style.display = 'none';
-        }, 600); // Match the transition duration in CSS (0.6s)
-      }
-    }
-  })();
-</script>
-
-</body></html>
