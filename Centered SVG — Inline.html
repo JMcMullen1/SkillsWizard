@@ -1799,6 +1799,9 @@
         svgRoot.addEventListener('click', function() {
           resetCourseFilter();
         });
+
+        // Reset filter on initialization to ensure all elements are visible
+        resetCourseFilter();
       }
 
       // Initialize click filtering when DOM is ready
