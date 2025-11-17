@@ -3933,6 +3933,12 @@ body {
 
                 content.innerHTML = html;
                 modal.classList.add('active');
+
+                // Reset scroll position to top
+                const modalContent = modal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.scrollTop = 0;
+                }
             }
 
             window.closeBridgeQuestions = function() {
@@ -4004,6 +4010,12 @@ body {
 
                 content.innerHTML = html;
                 modal.classList.add('active');
+
+                // Reset scroll position to top
+                const modalContent = modal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.scrollTop = 0;
+                }
             }
 
             window.closePersonality = function() {
@@ -4107,6 +4119,12 @@ body {
 
                 content.innerHTML = html;
                 modal.classList.add('active');
+
+                // Reset scroll position to top
+                const modalContent = modal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.scrollTop = 0;
+                }
             }
 
             window.closeWorkPreferences = function() {
