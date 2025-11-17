@@ -1390,6 +1390,7 @@
       };
 
       var skillsOverlay = document.getElementById('skills-assessment-overlay');
+      var skillsCard = document.getElementById('skills-assessment-card');
       var skillsTitle = document.getElementById('skills-title');
       var skillsCourseName = document.getElementById('skills-course-name');
       var skillsChecklist = document.getElementById('skills-checklist');
@@ -1431,6 +1432,9 @@
         // Show the popup
         document.body.classList.add('skills-popup-active');
         skillsOverlay.classList.add('skills-visible');
+
+        // Reset scroll position to top
+        skillsCard.scrollTop = 0;
 
         // Focus on close button
         setTimeout(function() {
