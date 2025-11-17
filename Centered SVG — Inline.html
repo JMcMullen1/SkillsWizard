@@ -1614,43 +1614,44 @@
         return linked;
       }
 
-      // Handle click on Accountancy Level 2 circle - show only specific circles
+      // Handle click on Accountancy Level 2 circle - follow Accountancy Level 3/4 visibility rules
       function handleAccountancyLevel2CircleClick() {
-        var svgRoot = document.getElementById('Layer_1');
-        if (!svgRoot) return;
+        // Use the same filtering logic as Accountancy Level 3/4
+        var courseName = 'Accountancy Level 3/4';
+        selectedCourse = courseName;
+        var linkedCourses = getLinkedCourses(courseName);
+        var visibleCoursesSet = {};
 
-        // The four circles to keep visible
-        var visibleCircles = [
-          'circle[cx="363.91"][cy="231"]',     // Clicked circle (Accountancy Level 2 area)
-          'circle[cx="452.22"][cy="283.32"]',  // Second circle
-          'circle[cx="363.91"][cy="339.24"]',  // Third circle
-          'circle[cx="363.91"][cy="448.1"]'    // Fourth circle
-        ];
-
-        // Hide ALL elements in the SVG except the 4 circles and background
-        var allElements = svgRoot.querySelectorAll('*');
-        for (var i = 0; i &lt; allElements.length; i++) {
-          var el = allElements[i];
-          // Skip defs, style, and filter elements
-          if (el.tagName === 'defs' || el.tagName === 'style' || el.tagName === 'filter' ||
-              el.tagName === 'linearGradient' || el.tagName === 'stop' ||
-              el.closest('defs') || el.closest('filter')) {
-            continue;
-          }
-          // Skip background rectangle (class st23)
-          if (el.classList &amp;&amp; el.classList.contains('st23')) {
-            continue;
-          }
-          el.style.display = 'none';
+        // Create a set of visible courses
+        for (var i = 0; i &lt; linkedCourses.length; i++) {
+          visibleCoursesSet[linkedCourses[i]] = true;
         }
 
-        // Show only the 4 specific circles
-        for (var i = 0; i &lt; visibleCircles.length; i++) {
-          var circle = svgRoot.querySelector(visibleCircles[i]);
-          if (circle) {
-            circle.style.display = '';
+        // Apply the same visibility rules as handleCourseClick
+        updateCourseVisibility(visibleCoursesSet);
+        updateConnectorVisibility(visibleCoursesSet);
+        applyCourseSpecificHiding(courseName);
+
+        // Additionally hide specific elements that should not be visible
+        // Hide the Accountancy Level 3/4 rect
+        var accountancyRect = document.getElementById('accountancy-level-3-4');
+        if (accountancyRect) {
+          accountancyRect.style.display = 'none';
+        }
+
+        // Hide the CLIPS Level 5 circle
+        var clipsCircle = document.querySelector('circle.st15[cx="478.78"][cy="409.97"]');
+        if (clipsCircle) {
+          clipsCircle.style.display = 'none';
+          // Hide the next sibling <g> element (CLIPS Level 5 text)
+          var nextG = clipsCircle.nextElementSibling;
+          if (nextG &amp;&amp; nextG.tagName === 'g') {
+            nextG.style.display = 'none';
           }
         }
+
+        // Show the course info
+        showCourseInfo(courseName);
       }
 
       // Handle course click
