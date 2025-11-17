@@ -1652,6 +1652,24 @@
             circle.style.display = '';
           }
         }
+
+        // Additionally hide specific elements (following Accountancy Level 3/4 visibility rules)
+        // Hide the Accountancy Level 3/4 rect
+        var accountancyRect = document.getElementById('accountancy-level-3-4');
+        if (accountancyRect) {
+          accountancyRect.style.display = 'none';
+        }
+
+        // Hide the CIPS Level 5 circle
+        var cipsCircle = document.querySelector('circle.st15[cx="478.78"][cy="409.97"]');
+        if (cipsCircle) {
+          cipsCircle.style.display = 'none';
+          // Hide the next sibling <g> element (CIPS Level 5 text)
+          var nextG = cipsCircle.nextElementSibling;
+          if (nextG &amp;&amp; nextG.tagName === 'g') {
+            nextG.style.display = 'none';
+          }
+        }
       }
 
       // Handle course click
