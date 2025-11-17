@@ -1639,39 +1639,24 @@
           'Business Analyst': true
         };
 
-        // Hide all data-course elements except the visible courses
-        var allCourseElements = document.querySelectorAll('[data-course]');
-        for (var i = 0; i &lt; allCourseElements.length; i++) {
-          var el = allCourseElements[i];
-          var course = el.getAttribute('data-course');
-          var normalizedCourse = normalizeCourseAttribute(course);
-
-          if (visibleCourses[normalizedCourse]) {
-            el.style.display = '';
-          } else {
-            el.style.display = 'none';
+        // Hide ALL elements in the SVG except the 4 circles and background
+        var allElements = svgRoot.querySelectorAll('*');
+        for (var i = 0; i &lt; allElements.length; i++) {
+          var el = allElements[i];
+          // Skip defs, style, and filter elements
+          if (el.tagName === 'defs' || el.tagName === 'style' || el.tagName === 'filter' ||
+              el.tagName === 'linearGradient' || el.tagName === 'stop' ||
+              el.closest('defs') || el.closest('filter')) {
+            continue;
           }
-        }
-
-        // Hide all connectors
-        for (var course in COURSE_CONNECTOR_CLASSES) {
-          var classes = COURSE_CONNECTOR_CLASSES[course];
-          for (var j = 0; j &lt; classes.length; j++) {
-            var elements = document.querySelectorAll('.' + classes[j]);
-            for (var k = 0; k &lt; elements.length; k++) {
-              elements[k].style.display = 'none';
-            }
+          // Skip background rectangle (class st23)
+          if (el.classList &amp;&amp; el.classList.contains('st23')) {
+            continue;
           }
+          el.style.display = 'none';
         }
 
-        // Hide all other elements except the 4 circles
-        // First, hide all circles with class st16
-        var allCircles = svgRoot.querySelectorAll('circle.st16');
-        for (var i = 0; i &lt; allCircles.length; i++) {
-          allCircles[i].style.display = 'none';
-        }
-
-        // Then show only the 4 specific circles
+        // Show only the 4 specific circles
         for (var i = 0; i &lt; visibleCircles.length; i++) {
           var circle = svgRoot.querySelector(visibleCircles[i]);
           if (circle) {
