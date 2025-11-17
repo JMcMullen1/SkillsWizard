@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <!-- saved from url=(0052)file:///C:/Users/jm/Downloads/Interactive_3_C's.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -798,7 +799,7 @@
 <path class="st24" d="M373.71,47.58l1.58-3.39c1.45.94,3.67,1.58,5.66,1.58,2.18,0,3-.58,3-1.48,0-2.67-9.84.06-9.84-6.45,0-3.09,2.79-5.27,7.54-5.27,2.24,0,4.73.51,6.27,1.42l-1.58,3.36c-1.61-.91-3.21-1.21-4.7-1.21-2.12,0-3.03.67-3.03,1.51,0,2.79,9.84.09,9.84,6.51,0,3.03-2.82,5.18-7.69,5.18-2.76,0-5.54-.76-7.06-1.76Z"></path>
 </g>
 </g>
-<g id="team-leader" data-course="Team Leader" style="">
+<g data-course="Team Leader" style="">
 <path class="st24" d="M339.85,202.45h-4.02v-2.37h10.95v2.37h-4.02v10.19h-2.91v-10.19Z"></path>
 <path class="st24" d="M358.07,210.31v2.33h-9.73v-12.56h9.49v2.33h-6.6v2.73h5.83v2.26h-5.83v2.91h6.84Z"></path>
 <path class="st24" d="M368.66,209.95h-5.83l-1.11,2.69h-2.98l5.6-12.56h2.87l5.62,12.56h-3.05l-1.11-2.69ZM367.74,207.74l-1.99-4.81-1.99,4.81h3.98Z"></path>
@@ -1513,10 +1514,6 @@
         'Data Engineer Level 5': {
           direct: [],
           core: ['Team Leader', 'Project Manager', 'Improvement Practitioner', 'Business Analyst']
-        },
-        'Team Leader': {
-          direct: [],
-          core: []
         }
       };
 
@@ -1529,8 +1526,7 @@
         'procurement-level-4': 'Procurement Level 4',
         'data-technician-level-3': 'Data Technician Level 3',
         'data-analyst-level-4': 'Data Analyst Level 4',
-        'data-engineer-level-5': 'Data Engineer Level 5',
-        'team-leader': 'Team Leader'
+        'data-engineer-level-5': 'Data Engineer Level 5'
       };
 
       // Normalize data-course attribute values to match course names in PROGRESSION_PATHWAYS
@@ -1618,53 +1614,6 @@
         return linked;
       }
 
-      // Special handler for Team Leader - show only the 4 core course circles
-      function handleTeamLeaderClick() {
-        var svgRoot = document.getElementById('Layer_1');
-        if (!svgRoot) return;
-
-        // The four circles to keep visible
-        var visibleCircles = [
-          'circle[cx="363.91"][cy="231"]',     // Team Leader
-          'circle[cx="452.22"][cy="283.32"]',  // Project Manager
-          'circle[cx="363.91"][cy="339.24"]',  // Improvement Practitioner
-          'circle[cx="363.91"][cy="448.1"]'    // Business Analyst
-        ];
-
-        // Keep only Team Leader and core courses visible
-        var visibleCourses = {
-          'Team Leader': true,
-          'Project Manager': true,
-          'Improvement Practitioner': true,
-          'Business Analyst': true
-        };
-
-        // Hide ALL elements in the SVG except the 4 circles and background
-        var allElements = svgRoot.querySelectorAll('*');
-        for (var i = 0; i &lt; allElements.length; i++) {
-          var el = allElements[i];
-          // Skip defs, style, and filter elements
-          if (el.tagName === 'defs' || el.tagName === 'style' || el.tagName === 'filter' ||
-              el.tagName === 'linearGradient' || el.tagName === 'stop' ||
-              el.closest('defs') || el.closest('filter')) {
-            continue;
-          }
-          // Skip background rectangle (class st23)
-          if (el.classList &amp;&amp; el.classList.contains('st23')) {
-            continue;
-          }
-          el.style.display = 'none';
-        }
-
-        // Show only the 4 specific circles
-        for (var i = 0; i &lt; visibleCircles.length; i++) {
-          var circle = svgRoot.querySelector(visibleCircles[i]);
-          if (circle) {
-            circle.style.display = '';
-          }
-        }
-      }
-
       // Handle course click
       function handleCourseClick(courseName) {
         // If the same course is clicked again, reset the view
@@ -1677,14 +1626,6 @@
         // show the skills assessment popup instead of filtering
         if (selectedCourse !== null && selectedCourse !== courseName) {
           showSkillsAssessment(courseName);
-          return;
-        }
-
-        // Special handling for Team Leader - show only core course circles
-        if (courseName === 'Team Leader') {
-          selectedCourse = courseName;
-          handleTeamLeaderClick();
-          showCourseInfo(courseName);
           return;
         }
 
@@ -1725,22 +1666,14 @@
           }
         }
 
-        // Reset circle visibility (for Team Leader special handling)
-        var svgRoot = document.getElementById('Layer_1');
-        if (svgRoot) {
-          var allCircles = svgRoot.querySelectorAll('circle.st16');
-          for (var i = 0; i &lt; allCircles.length; i++) {
-            allCircles[i].style.display = '';
-          }
-        }
-
         // Reset course-specific hidden elements
         resetCourseSpecificHiding();
       }
 
       // Course labels that should always remain visible (non-clickable labels)
       var ALWAYS_VISIBLE_COURSE_LABELS = [
-        'Developing the 3 C\'s'
+        'Developing the 3 C\'s',
+        'Team Leader'
       ];
 
       // Update course visibility based on visible courses set
