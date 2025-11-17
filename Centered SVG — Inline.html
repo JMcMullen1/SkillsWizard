@@ -572,6 +572,18 @@
     cursor: pointer;
   }
 
+  /* Persistent hover effect for clicked course - applies same styling as hover */
+  rect:not([stroke-dasharray]):not(.st23).active-course,
+  circle:not([stroke-dasharray]).active-course,
+  ellipse:not([stroke-dasharray]).active-course,
+  path:not([stroke-dasharray]):not(.st24):not(.st27).active-course:not(.pulse-target),
+  polygon:not([stroke-dasharray]):not(.st24):not(.st27).active-course:not(.pulse-target) {
+    filter: url(#outer-glow);
+    stroke: #FFFFFF;
+    stroke-width: 4;
+    cursor: pointer;
+  }
+
   /* Explicitly prevent connectors (pulse-target) from picking up the outer glow
      on direct hover.  When these elements are hovered, rely solely on the
      scripted pulse animation instead of the glow filter. */
@@ -1650,6 +1662,7 @@
 
       // Keep track of selected course
       var selectedCourse = null;
+      var selectedCourseNode = null; // Track the SVG node element for persistent hover effect
 
       // Get linked courses for a given course
       function getLinkedCourses(courseName) {
@@ -1671,7 +1684,7 @@
       }
 
       // Handle course click
-      function handleCourseClick(courseName) {
+      function handleCourseClick(courseName, node) {
         // If the same course is clicked again, reset the view
         if (selectedCourse === courseName) {
           resetCourseFilter();
@@ -1687,6 +1700,21 @@
 
         // First click: filter the view to show pathways
         selectedCourse = courseName;
+        selectedCourseNode = node;
+
+        // Apply persistent hover effect to the clicked course node
+        if (node) {
+          // Find all child elements that match the hover selector patterns
+          var children = node.querySelectorAll('rect:not([stroke-dasharray]):not(.st23), circle:not([stroke-dasharray]), ellipse:not([stroke-dasharray]), path:not([stroke-dasharray]):not(.st24):not(.st27):not(.pulse-target), polygon:not([stroke-dasharray]):not(.st24):not(.st27):not(.pulse-target)');
+          for (var i = 0; i &lt; children.length; i++) {
+            children[i].classList.add('active-course');
+          }
+          // Also apply to the node itself if it matches
+          if (node.matches('rect:not([stroke-dasharray]):not(.st23), circle:not([stroke-dasharray]), ellipse:not([stroke-dasharray]), path:not([stroke-dasharray]):not(.st24):not(.st27):not(.pulse-target), polygon:not([stroke-dasharray]):not(.st24):not(.st27):not(.pulse-target)')) {
+            node.classList.add('active-course');
+          }
+        }
+
         var linkedCourses = getLinkedCourses(courseName);
         var visibleCoursesSet = {};
 
@@ -1704,6 +1732,20 @@
       // Reset course filter to show all courses
       function resetCourseFilter() {
         selectedCourse = null;
+
+        // Remove persistent hover effect from previously selected course
+        if (selectedCourseNode) {
+          // Remove class from all child elements
+          var children = selectedCourseNode.querySelectorAll('.active-course');
+          for (var i = 0; i &lt; children.length; i++) {
+            children[i].classList.remove('active-course');
+          }
+          // Also remove from the node itself if it has the class
+          if (selectedCourseNode.classList.contains('active-course')) {
+            selectedCourseNode.classList.remove('active-course');
+          }
+          selectedCourseNode = null;
+        }
 
         // Show all course groups
         var allCourseElements = document.querySelectorAll('[data-course]');
@@ -1846,13 +1888,13 @@
 
           node.style.cursor = 'pointer';
 
-          // Use a closure to capture the correct courseName
-          (function(courseName) {
-            node.addEventListener('click', function(evt) {
+          // Use a closure to capture the correct courseName and node
+          (function(courseName, courseNode) {
+            courseNode.addEventListener('click', function(evt) {
               evt.stopPropagation();
-              handleCourseClick(courseName);
+              handleCourseClick(courseName, courseNode);
             });
-          })(SVG_COURSE_NODE_MAP[svgId]);
+          })(SVG_COURSE_NODE_MAP[svgId], node);
         }
 
         // Optional: clicking on empty space resets the view
