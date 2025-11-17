@@ -1290,41 +1290,50 @@
       // ===== Landing Screen Logic =====
 
       // Initialize landing screen on DOM load
-      var landingOverlay = document.getElementById('landing-overlay');
-      var beginButton = document.getElementById('begin-wizard');
+      function initializeLandingScreen() {
+        var landingOverlay = document.getElementById('landing-overlay');
+        var beginButton = document.getElementById('begin-wizard');
 
-      // Function to dismiss the landing screen
-      function dismissLanding() {
-        // Remove landing-active class from body to remove blur
-        document.body.classList.remove('landing-active');
+        // Function to dismiss the landing screen
+        function dismissLanding() {
+          // Remove landing-active class from body to remove blur
+          document.body.classList.remove('landing-active');
 
-        // Add landing-hidden class to overlay for fade-out animation
-        landingOverlay.classList.add('landing-hidden');
+          // Add landing-hidden class to overlay for fade-out animation
+          landingOverlay.classList.add('landing-hidden');
 
-        // After transition ends, hide completely and remove from accessibility tree
-        setTimeout(function() {
-          landingOverlay.style.display = 'none';
-          // Move focus to the document body
-          document.body.focus();
-        }, 600); // Match the CSS transition duration
+          // After transition ends, hide completely and remove from accessibility tree
+          setTimeout(function() {
+            landingOverlay.style.display = 'none';
+            // Move focus to the document body
+            document.body.focus();
+          }, 600); // Match the CSS transition duration
+        }
+
+        // Handle Begin button click
+        if (beginButton) {
+          beginButton.addEventListener('click', dismissLanding);
+
+          // Handle keyboard events (Enter and Space)
+          beginButton.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              dismissLanding();
+            }
+          });
+
+          // Set initial focus to the Begin button
+          setTimeout(function() {
+            beginButton.focus();
+          }, 100);
+        }
       }
 
-      // Handle Begin button click
-      if (beginButton) {
-        beginButton.addEventListener('click', dismissLanding);
-
-        // Handle keyboard events (Enter and Space)
-        beginButton.addEventListener('keydown', function(e) {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            dismissLanding();
-          }
-        });
-
-        // Set initial focus to the Begin button
-        setTimeout(function() {
-          beginButton.focus();
-        }, 100);
+      // Wait for DOM to be ready before initializing
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeLandingScreen);
+      } else {
+        initializeLandingScreen();
       }
 
       // ===== Skills Assessment Popup Logic =====
