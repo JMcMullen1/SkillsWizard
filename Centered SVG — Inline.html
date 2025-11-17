@@ -6,6 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Centered SVG — Inline</title>
   <style>
+    /* CSS Variables - TAA Brand Colors */
+    :root {
+      --taa-navy: #1f3455;
+      --taa-orange: #ef8005;
+      --taa-white: #ffffff;
+      --primary-gradient: linear-gradient(135deg, #1f3455 0%, #2a4674 100%);
+      --secondary-gradient: linear-gradient(135deg, #ef8005 0%, #fb9623 100%);
+    }
+
     html, body { height: 100%; margin: 0; background: #fff; }
     body { display: flex; align-items: center; justify-content: center; }
     svg { max-width: 90vw; max-height: 90vh; width: 100%; height: auto; display: block; transition: filter 0.5s ease; }
@@ -134,13 +143,15 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, rgba(32, 52, 86, 0.95) 0%, rgba(76, 106, 165, 0.92) 50%, rgba(77, 159, 168, 0.95) 100%);
+      background: rgba(0, 0, 0, 0.7);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
+      z-index: 9999;
       opacity: 0;
       transition: opacity 0.6s ease;
+      overflow-y: auto;
+      padding: 2rem;
     }
 
     #skills-assessment-overlay.skills-visible {
@@ -150,77 +161,100 @@
 
     /* Skills assessment card */
     #skills-assessment-card {
-      background: rgba(32, 52, 86, 0.85);
-      border: 2px solid rgba(109, 164, 217, 0.4);
-      border-radius: 16px;
-      padding: 40px 48px;
-      max-width: 650px;
-      max-height: 80vh;
+      background: white;
+      border-radius: 1.5rem;
+      max-width: 800px;
+      width: 100%;
+      max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
-                  0 0 0 1px rgba(255, 255, 255, 0.1) inset,
-                  0 0 40px rgba(109, 164, 217, 0.3);
-      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      position: relative;
     }
 
-    #skills-assessment-card h2 {
+    /* Skills assessment header */
+    .skills-modal-header {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 2rem;
+      border-radius: 1.5rem 1.5rem 0 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .skills-modal-header h2 {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 700;
-      color: #ffffff;
-      margin: 0 0 16px 0;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-      letter-spacing: -0.5px;
+      color: white;
+      margin: 0 0 0.5rem 0;
     }
 
-    #skills-assessment-card h3 {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #ffffff;
-      margin: 24px 0 16px 0;
-    }
-
-    #skills-assessment-card p {
+    .skills-modal-header p {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       font-size: 1rem;
-      color: #e8f1f8;
-      margin: 0 0 24px 0;
+      color: white;
+      margin: 0;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    /* Skills assessment body */
+    .skills-modal-body {
+      padding: 2rem;
+    }
+
+    .skills-modal-body h3 {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #2b3d6d;
+      margin: 0 0 1rem 0;
+    }
+
+    .skills-modal-body > p {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1rem;
+      color: #343a40;
+      margin: 0 0 1.5rem 0;
       line-height: 1.6;
     }
 
     /* Skills checklist */
     .skills-checklist {
-      margin: 24px 0;
+      margin: 1.5rem 0;
     }
 
     .skill-item {
       display: flex;
       align-items: flex-start;
-      margin-bottom: 16px;
-      padding: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 8px;
-      transition: background 0.2s ease;
+      margin-bottom: 0.8rem;
+      padding: 0.8rem;
+      background: #f8f9fa;
+      border-radius: 0.5rem;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
     }
 
     .skill-item:hover {
-      background: rgba(255, 255, 255, 0.08);
+      border-color: #667eea;
+      background: rgba(102, 126, 234, 0.05);
     }
 
     .skill-item input[type="checkbox"] {
-      margin-right: 12px;
-      margin-top: 4px;
-      width: 18px;
-      height: 18px;
+      margin-right: 0.8rem;
+      margin-top: 2px;
+      width: 20px;
+      height: 20px;
       cursor: pointer;
       flex-shrink: 0;
+      accent-color: #667eea;
     }
 
     .skill-item label {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      font-size: 1rem;
-      color: #e8f1f8;
+      font-size: 0.95rem;
+      color: #343a40;
       cursor: pointer;
       line-height: 1.5;
       flex: 1;
@@ -231,48 +265,54 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       font-size: 1rem;
       font-weight: 600;
-      color: #ffffff;
-      background: linear-gradient(135deg, #4c6aa5 0%, #4d9fa8 100%);
+      color: white;
+      background: var(--secondary-gradient);
       border: none;
-      border-radius: 8px;
-      padding: 12px 32px;
+      border-radius: 0.75rem;
+      padding: 1rem 2rem;
       cursor: pointer;
-      box-shadow: 0 4px 16px rgba(76, 106, 165, 0.4);
+      box-shadow: 0 4px 12px rgba(239, 128, 5, 0.3);
       transition: all 0.3s ease;
       outline: none;
-      margin-top: 24px;
+      margin-top: 1.5rem;
       width: 100%;
     }
 
     #close-skills-popup:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(76, 106, 165, 0.6);
-      background: linear-gradient(135deg, #5a7ab5 0%, #5dafb8 100%);
+      box-shadow: 0 6px 16px rgba(239, 128, 5, 0.4);
+      background: linear-gradient(135deg, #fb9623 0%, #ffa940 100%);
     }
 
     #close-skills-popup:focus {
-      box-shadow: 0 0 0 3px rgba(109, 164, 217, 0.5), 0 6px 24px rgba(76, 106, 165, 0.6);
+      box-shadow: 0 0 0 3px rgba(239, 128, 5, 0.3), 0 6px 16px rgba(239, 128, 5, 0.4);
     }
 
     #close-skills-popup:active {
       transform: translateY(0);
-      box-shadow: 0 2px 8px rgba(76, 106, 165, 0.4);
+      box-shadow: 0 2px 8px rgba(239, 128, 5, 0.3);
     }
 
     /* Responsive adjustments for skills popup */
     @media (max-width: 768px) {
       #skills-assessment-card {
-        padding: 24px;
-        max-width: 90%;
-        max-height: 90vh;
+        max-width: 95%;
       }
 
-      #skills-assessment-card h2 {
+      .skills-modal-header {
+        padding: 1.5rem;
+      }
+
+      .skills-modal-header h2 {
         font-size: 1.5rem;
       }
 
-      #skills-assessment-card h3 {
-        font-size: 1.125rem;
+      .skills-modal-body {
+        padding: 1.5rem;
+      }
+
+      .skills-modal-body h3 {
+        font-size: 1rem;
       }
     }
   </style>
@@ -290,14 +330,18 @@
   <!-- Skills Assessment Popup -->
   <div id="skills-assessment-overlay" role="dialog" aria-modal="true" aria-labelledby="skills-title">
     <div id="skills-assessment-card">
-      <h2 id="skills-title"></h2>
-      <p id="skills-intro-text">To move onto this course you will need to be demonstrating or have the opportunity to demonstrate the following skills in your current role</p>
-      <h3>Skills Assessment: <span id="skills-course-name"></span></h3>
-      <p>Please select all statements that apply to you:</p>
-      <div class="skills-checklist" id="skills-checklist">
-        <!-- Skills will be dynamically populated here -->
+      <div class="skills-modal-header">
+        <h2 id="skills-title"></h2>
+        <p id="skills-intro-text">To move onto this course you will need to be demonstrating or have the opportunity to demonstrate the following skills in your current role</p>
       </div>
-      <button id="close-skills-popup" aria-label="Close skills assessment">Close</button>
+      <div class="skills-modal-body">
+        <h3>Skills Assessment: <span id="skills-course-name"></span></h3>
+        <p>Please select all statements that apply to you:</p>
+        <div class="skills-checklist" id="skills-checklist">
+          <!-- Skills will be dynamically populated here -->
+        </div>
+        <button id="close-skills-popup" aria-label="Close skills assessment">Close</button>
+      </div>
     </div>
   </div>
 
