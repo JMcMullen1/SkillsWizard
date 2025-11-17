@@ -49,16 +49,24 @@
 
     /* Central card container */
     #landing-card {
-      background: rgba(32, 52, 86, 0.85);
-      border: 2px solid rgba(109, 164, 217, 0.4);
-      border-radius: 16px;
-      padding: 48px 64px;
-      max-width: 600px;
+      position: relative;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      max-width: 90vw;
+      max-height: 90vh;
       text-align: center;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
-                  0 0 0 1px rgba(255, 255, 255, 0.1) inset,
-                  0 0 40px rgba(109, 164, 217, 0.3);
-      backdrop-filter: blur(10px);
+    }
+
+    /* GIF container styling */
+    #landing-card img {
+      max-width: 100%;
+      max-height: 90vh;
+      width: auto;
+      height: auto;
+      display: block;
+      margin: 0 auto;
     }
 
     /* Title styling */
@@ -81,35 +89,40 @@
       line-height: 1.6;
     }
 
-    /* Begin button styling */
+    /* Begin button styling - TAA Orange, positioned bottom right */
     #begin-wizard {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       font-size: 1.125rem;
       font-weight: 600;
       color: #ffffff;
-      background: linear-gradient(135deg, #4c6aa5 0%, #4d9fa8 100%);
+      background: var(--taa-orange);
+      background: linear-gradient(135deg, #ef8005 0%, #fb9623 100%);
       border: none;
       border-radius: 8px;
       padding: 14px 48px;
       cursor: pointer;
-      box-shadow: 0 4px 16px rgba(76, 106, 165, 0.4);
+      box-shadow: 0 4px 16px rgba(239, 128, 5, 0.4);
       transition: all 0.3s ease;
       outline: none;
+      z-index: 10;
     }
 
     #begin-wizard:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(76, 106, 165, 0.6);
-      background: linear-gradient(135deg, #5a7ab5 0%, #5dafb8 100%);
+      box-shadow: 0 6px 24px rgba(239, 128, 5, 0.6);
+      background: linear-gradient(135deg, #fb9623 0%, #ffad42 100%);
     }
 
     #begin-wizard:focus {
-      box-shadow: 0 0 0 3px rgba(109, 164, 217, 0.5), 0 6px 24px rgba(76, 106, 165, 0.6);
+      box-shadow: 0 0 0 3px rgba(239, 128, 5, 0.5), 0 6px 24px rgba(239, 128, 5, 0.6);
     }
 
     #begin-wizard:active {
       transform: translateY(0);
-      box-shadow: 0 2px 8px rgba(76, 106, 165, 0.4);
+      box-shadow: 0 2px 8px rgba(239, 128, 5, 0.4);
     }
 
     /* Responsive adjustments */
@@ -320,8 +333,7 @@
   <!-- Landing Screen Overlay -->
   <div id="landing-overlay" role="dialog" aria-modal="true" aria-labelledby="landing-title">
     <div id="landing-card">
-      <h1 id="landing-title">Interactive Skills Wizard</h1>
-      <p>Click your current course of study to see your potential pathways</p>
+      <img src="https://i.postimg.cc/4xLHnxCR/Untitled-7.gif" alt="Skills Wizard Landing Page" id="landing-title" />
       <button id="begin-wizard" aria-label="Begin interactive wizard">Begin</button>
     </div>
   </div>
