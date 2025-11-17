@@ -5,6 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Centered SVG — Inline</title>
   <style>
+/* ==========================================
+   CSS Variables - Color Scheme & Theme
+   ========================================== */
+:root {
+    /* TAA Brand Colors - Official */
+    --taa-navy: #1f3455;
+    --taa-orange: #ef8005;
+    --taa-white: #ffffff;
+    --taa-light-gray: #f8f9fa;
+    --taa-medium-gray: #e0e0e0;
+    --taa-dark-gray: #343a40;
+
+    /* Primary Color Scheme - Using TAA Colors */
+    --primary-color: #ef8005;
+    --primary-dark: #be6704;
+    --primary-light: #fb9623;
+    --secondary-color: #1f3455;
+    --secondary-dark: #121e31;
+    --secondary-light: #2a4674;
+
+    --success-color: #4ade80;
+    --warning-color: #ef8005;
+    --danger-color: #f87171;
+    --light-gray: #f8f9fa;
+    --medium-gray: #e0e0e0;
+    --dark-blue: #1f3455;
+    --text-color: #343a40;
+
+    /* Gradient Themes - TAA Branded */
+    --primary-gradient: linear-gradient(135deg, #1f3455 0%, #2a4674 100%);
+    --secondary-gradient: linear-gradient(135deg, #ef8005 0%, #fb9623 100%);
+    --accent-gradient: linear-gradient(135deg, #ef8005 0%, #fb9623 100%);
+
+    /* Glass Morphism Effects */
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(224, 224, 224, 0.3);
+    --dark-overlay: rgba(31, 52, 85, 0.95);
+}
+
     html, body { height: 100%; margin: 0; background: #fff; }
     body { display: flex; align-items: center; justify-content: center; }
     svg { max-width: 90vw; max-height: 90vh; width: 100%; height: auto; display: block; transition: filter 0.5s ease; }
@@ -391,24 +430,6 @@
         <p id="skills-intro-text">Help us understand your current skills and experience</p>
       </div>
       <div class="modal-body">
-        <div class="progress-steps">
-          <div class="step active">
-            <div class="step-circle">1</div>
-            <div class="step-label">Skills</div>
-          </div>
-          <div class="step">
-            <div class="step-circle">2</div>
-            <div class="step-label">Personality</div>
-          </div>
-          <div class="step">
-            <div class="step-circle">3</div>
-            <div class="step-label">Preferences</div>
-          </div>
-          <div class="step">
-            <div class="step-circle">4</div>
-            <div class="step-label">Results</div>
-          </div>
-        </div>
         <div id="skills-content">
           <h2 id="skills-course-title" style="color: #2b3d6d; margin-bottom: 1.5rem;">Skills Assessment: <span id="skills-course-name"></span></h2>
           <p style="margin-bottom: 2rem; color: #666;">Please select all statements that apply to you:</p>
