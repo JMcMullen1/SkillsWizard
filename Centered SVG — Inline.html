@@ -1618,6 +1618,68 @@
         return linked;
       }
 
+      // Special handler for Team Leader - show only the 4 core course circles
+      function handleTeamLeaderClick() {
+        var svgRoot = document.getElementById('Layer_1');
+        if (!svgRoot) return;
+
+        // The four circles to keep visible
+        var visibleCircles = [
+          'circle[cx="363.91"][cy="231"]',     // Team Leader
+          'circle[cx="452.22"][cy="283.32"]',  // Project Manager
+          'circle[cx="363.91"][cy="339.24"]',  // Improvement Practitioner
+          'circle[cx="363.91"][cy="448.1"]'    // Business Analyst
+        ];
+
+        // Keep only Team Leader and core courses visible
+        var visibleCourses = {
+          'Team Leader': true,
+          'Project Manager': true,
+          'Improvement Practitioner': true,
+          'Business Analyst': true
+        };
+
+        // Hide all data-course elements except the visible courses
+        var allCourseElements = document.querySelectorAll('[data-course]');
+        for (var i = 0; i &lt; allCourseElements.length; i++) {
+          var el = allCourseElements[i];
+          var course = el.getAttribute('data-course');
+          var normalizedCourse = normalizeCourseAttribute(course);
+
+          if (visibleCourses[normalizedCourse]) {
+            el.style.display = '';
+          } else {
+            el.style.display = 'none';
+          }
+        }
+
+        // Hide all connectors
+        for (var course in COURSE_CONNECTOR_CLASSES) {
+          var classes = COURSE_CONNECTOR_CLASSES[course];
+          for (var j = 0; j &lt; classes.length; j++) {
+            var elements = document.querySelectorAll('.' + classes[j]);
+            for (var k = 0; k &lt; elements.length; k++) {
+              elements[k].style.display = 'none';
+            }
+          }
+        }
+
+        // Hide all other elements except the 4 circles
+        // First, hide all circles with class st16
+        var allCircles = svgRoot.querySelectorAll('circle.st16');
+        for (var i = 0; i &lt; allCircles.length; i++) {
+          allCircles[i].style.display = 'none';
+        }
+
+        // Then show only the 4 specific circles
+        for (var i = 0; i &lt; visibleCircles.length; i++) {
+          var circle = svgRoot.querySelector(visibleCircles[i]);
+          if (circle) {
+            circle.style.display = '';
+          }
+        }
+      }
+
       // Handle course click
       function handleCourseClick(courseName) {
         // If the same course is clicked again, reset the view
@@ -1630,6 +1692,14 @@
         // show the skills assessment popup instead of filtering
         if (selectedCourse !== null && selectedCourse !== courseName) {
           showSkillsAssessment(courseName);
+          return;
+        }
+
+        // Special handling for Team Leader - show only core course circles
+        if (courseName === 'Team Leader') {
+          selectedCourse = courseName;
+          handleTeamLeaderClick();
+          showCourseInfo(courseName);
           return;
         }
 
@@ -1667,6 +1737,15 @@
             for (var k = 0; k &lt; elements.length; k++) {
               elements[k].style.display = '';
             }
+          }
+        }
+
+        // Reset circle visibility (for Team Leader special handling)
+        var svgRoot = document.getElementById('Layer_1');
+        if (svgRoot) {
+          var allCircles = svgRoot.querySelectorAll('circle.st16');
+          for (var i = 0; i &lt; allCircles.length; i++) {
+            allCircles[i].style.display = '';
           }
         }
 
