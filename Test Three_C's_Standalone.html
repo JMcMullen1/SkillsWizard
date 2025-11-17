@@ -3195,6 +3195,83 @@ body {
                 }
             };
 
+            // Map SVG element IDs to course names
+            const SVG_COURSE_NODE_MAP = {
+                'accountancy-level-2': 'Accountancy Level 2',
+                'accountancy-level-3-4': 'Accountancy Level 3/4',
+                'business-admin-level-3': 'Business Admin Level 3',
+                'procurement-level-3': 'Procurement Level 3',
+                'procurement-level-4': 'Procurement Level 4',
+                'data-technician-level-3': 'Data Technician Level 3',
+                'data-analyst-level-4': 'Data Analyst Level 4',
+                'data-engineer-level-5': 'Data Engineer Level 5'
+            };
+
+            // Track currently selected course for click filtering
+            let selectedCourse = null;
+
+            // Get linked courses for a given course (for future pathway filtering)
+            function getLinkedCourses(courseName) {
+                const linked = [courseName];
+                const cfg = PROGRESSION_PATHWAYS[courseName];
+                if (cfg) {
+                    if (cfg.direct) {
+                        linked.push(...cfg.direct);
+                    }
+                    if (cfg.core) {
+                        linked.push(...cfg.core);
+                    }
+                }
+                return linked;
+            }
+
+            // Handle course node click - opens the bridge questions modal
+            function handleCourseClick(courseName) {
+                console.log('Course clicked:', courseName);
+
+                // Set the current course in state
+                if (typeof state !== 'undefined' && state.userData) {
+                    state.userData.currentCourse = courseName;
+                }
+
+                // Open the bridge questions modal for this course
+                if (typeof openBridgeQuestionsModal === 'function') {
+                    openBridgeQuestionsModal();
+                } else {
+                    console.error('openBridgeQuestionsModal function not found');
+                }
+            }
+
+            // Initialize click handlers for SVG course nodes
+            function initCourseClickFiltering() {
+                const svgRoot = document.getElementById('Layer_1');
+                if (!svgRoot) {
+                    console.warn('SVG root element (Layer_1) not found');
+                    return;
+                }
+
+                // Attach click handlers to each main course node
+                for (const svgId in SVG_COURSE_NODE_MAP) {
+                    const node = svgRoot.querySelector('#' + svgId);
+                    if (!node) {
+                        console.warn('SVG node not found:', svgId);
+                        continue;
+                    }
+
+                    node.style.cursor = 'pointer';
+
+                    // Use closure to capture the correct courseName
+                    (function(courseName) {
+                        node.addEventListener('click', function(evt) {
+                            evt.stopPropagation();
+                            handleCourseClick(courseName);
+                        });
+                    })(SVG_COURSE_NODE_MAP[svgId]);
+                }
+
+                console.log('Course click handlers initialized for', Object.keys(SVG_COURSE_NODE_MAP).length, 'nodes');
+            }
+
             // Bridge questions placeholders for each course
             const BRIDGE_QUESTIONS = {
                 'Accountancy Level 2': [
@@ -3704,6 +3781,9 @@ body {
                 } else {
                     console.error('✗ Could not find coach contact form');
                 }
+
+                // Initialize click handlers for SVG course nodes
+                initCourseClickFiltering();
 
                 setTimeout(() => startConversation(), 500);
             }
