@@ -1433,8 +1433,16 @@
         document.body.classList.add('skills-popup-active');
         skillsOverlay.classList.add('skills-visible');
 
-        // Reset scroll position to top
+        // Reset scroll position to top for both overlay and card
+        // Do it immediately and also after a short delay to ensure it takes effect
+        skillsOverlay.scrollTop = 0;
         skillsCard.scrollTop = 0;
+
+        // Use requestAnimationFrame to ensure DOM is updated
+        requestAnimationFrame(function() {
+          skillsOverlay.scrollTop = 0;
+          skillsCard.scrollTop = 0;
+        });
 
         // Focus on close button
         setTimeout(function() {
