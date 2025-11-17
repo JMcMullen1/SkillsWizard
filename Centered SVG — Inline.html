@@ -1517,6 +1517,10 @@
         'Data Engineer Level 5': {
           direct: [],
           core: ['Team Leader Level 3', 'Project Manager', 'Improvement Practitioner', 'Business Analyst']
+        },
+        'Team Leader Level 3': {
+          direct: ['Accountancy Level 3/4', 'Business Admin Level 3', 'Procurement Level 3', 'Procurement Level 4', 'Data Technician Level 3', 'Data Analyst Level 4', 'Data Engineer Level 5'],
+          core: []
         }
       };
 
@@ -1553,7 +1557,8 @@
         'Procurement Level 4': ['connector-original-pl4', 'connector-duplicate-pl4'],
         'Data Technician Level 3': ['connector-original-dt3', 'connector-duplicate-dt3'],
         'Data Analyst Level 4': ['connector-original-da4', 'connector-duplicate-da4'],
-        'Data Engineer Level 5': ['connector-original-de5', 'connector-duplicate-de5']
+        'Data Engineer Level 5': ['connector-original-de5', 'connector-duplicate-de5'],
+        'Team Leader Level 3': []
       };
 
       // ===== Course-Specific Element Hiding Rules =====
@@ -1592,6 +1597,10 @@
         ],
 
         'Data Engineer Level 5': [
+          // Add specific elements to hide for this course
+        ],
+
+        'Team Leader Level 3': [
           // Add specific elements to hide for this course
         ]
       };
